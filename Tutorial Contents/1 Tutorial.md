@@ -75,7 +75,7 @@ transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.d
 ```
 
 Your camera controls should look like something like this:
-![[2024-10-19 13-57-19.mp4]]
+https://github.com/user-attachments/assets/f1ceeb14-b2d4-45fc-a91b-552eb9502186
 
 #### Birds-Eye View:
 
@@ -139,7 +139,7 @@ private void UpdateRotation()
 ```
 
 This should be your final result:
-![[2024-10-20 18-53-47.mp4]]
+https://github.com/user-attachments/assets/72604429-fcc6-457d-855c-25026723f132
 
 This should be your completed script:
 
