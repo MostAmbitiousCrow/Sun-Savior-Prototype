@@ -35,7 +35,10 @@ horizontalDetectionL = screenSizeX * (percentageHorizontalDetectionL / 100); // 
 (Add possible improvement here)
 
 You'll need to toggle **Allow Fullscreen Switch** so the screen width and height values don't get changed by the player too often.
-![[Screenshot 2024-10-19 at 12.35.32.png]]
+
+<img width="537" alt="Disable Fullscreen Switch" src="https://github.com/user-attachments/assets/4830fe6f-c8f1-45c1-b1af-686c9babade1">
+
+
 ### 2. Camera Movement:
 #### Horizontal Movement:
 
@@ -75,7 +78,10 @@ transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.d
 ```
 
 Your camera controls should look like something like this:
-https://github.com/user-attachments/assets/f1ceeb14-b2d4-45fc-a91b-552eb9502186
+
+https://github.com/user-attachments/assets/9b94280b-6be9-432f-8eff-ff143f7f0593
+
+
 
 #### Birds-Eye View:
 
@@ -139,7 +145,11 @@ private void UpdateRotation()
 ```
 
 This should be your final result:
-https://github.com/user-attachments/assets/72604429-fcc6-457d-855c-25026723f132
+
+
+https://github.com/user-attachments/assets/dbbb7ba3-450f-4815-910d-e24c42a5e48e
+
+
 
 This should be your completed script:
 
