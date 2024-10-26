@@ -1,24 +1,26 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Unit_Place_Controller : MonoBehaviour
 {
     [Header("Components")]
-    [SerializeField] GameObject turretPrefab;
-    [SerializeField] GameObject ghostTurretPrefab;
-    [SerializeField] Transform ghostTurret;
-    [SerializeField] GameObject ghostTurretObj;
-    [SerializeField] Transform tower;
-    private Vector3 towerPosition;
-    [SerializeField] Camera mainCam;
+    [SerializeField] GameObject turretPrefab; // Player Turret Prefab to create
+    [SerializeField] GameObject ghostTurretPrefab; // Player Ghost Turret Prefab to create
+    [SerializeField] Transform ghostTurret; // Instantiated Ghost Turret Transform component
+    [SerializeField] GameObject ghostTurretObj; // Instantiated Ghost Turret GameObject component
+    [SerializeField] Transform tower; // Player Tower Transform Component
+    private Vector3 towerPosition; // Saved Tower Vector 3 coords
+    [SerializeField] Camera mainCam; // Main Camera component
+    [SerializeField] BoxCollider detectionBox; // Collider to check if there's space available
+    [SerializeField] Transform detectionBoxT; // Transform for detection box
 
     [Header("Control Variables")]
-    [SerializeField] float placementDelay = .1f;
-    private bool canCreateTurret;
-    [SerializeField] LayerMask layerMask;
+    [SerializeField] float placementDelay = .1f; // Timed delay between each Player Turret placement
+    private bool canCreateTurret; // Check if the player can create a new Turret
+    [SerializeField] LayerMask layerMask; // Ghost Movement Layermask
 
-    // Start is called before the first frame update
+    #region Start
     void Start()
     {
         towerPosition = tower.position;
@@ -26,40 +28,71 @@ public class Unit_Place_Controller : MonoBehaviour
         ghostTurretObj.SetActive(false);
         ghostTurret = ghostTurretObj.GetComponent<Transform>();
     }
+    #endregion
 
-    // Update is called once per frame
+    #region Update
     void Update()
     {
         InputListener();
     }
+    #endregion
 
+    #region Input Listener
     void InputListener()
     {
         if (Input.GetMouseButton(1))
         {
             GhostTurretMovement();
-            if (Input.GetMouseButtonDown(0) && canCreateTurret) {CreateTurret();}
+            if (Input.GetMouseButtonDown(0) && canCreateTurret && SufficentMoney()) {CreateTurret();}
         }
-        else ghostTurretObj.SetActive(false);
+        else
+        {
+            ghostTurretObj.SetActive(false);
+            detectionBox.enabled = false;
+        }
     }
+    #endregion
 
+    #region Ghost Turret Movement
     private void GhostTurretMovement()
     {
         Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
-        Physics.Raycast(ray, out RaycastHit hit, 100, layerMask);
-        Debug.DrawRay(ray.origin , ray.direction * 100, Color.red);
-
-        if (hit.collider != null && hit.point.y == .5)
+        if (Physics.Raycast(ray, out RaycastHit hit, 100, layerMask))
         {
-            Debug.Log(hit.point);
-            Vector3 HP = hit.point;
-            Vector3 newPos = new(HP.x, Mathf.Round(HP.y * 10) / 10, HP.z);
+            Debug.DrawRay(ray.origin, ray.direction * 100, Color.red);
+            
+            Vector3 hitPosition = hit.point;
 
-            ghostTurret.position = newPos;
-            ghostTurretObj.SetActive(true);
+            // Hit Collider and height Approximate check
+            if (hit.collider != null && Mathf.Approximately(hitPosition.y, 0.5f))
+            {
+                Debug.Log(hitPosition);
+
+                // Round y to the nearest tenth
+                Vector3 newPos = new(hitPosition.x, Mathf.Round(hitPosition.y * 10) / 10, hitPosition.z);
+
+                // Calulate roation to face away from the Tower
+                float rotationY = Quaternion.LookRotation(ghostTurret.position - towerPosition).eulerAngles.y;
+                Quaternion newRotation = Quaternion.Euler(0, rotationY, 0);
+
+                // Set positions and rotations
+                ghostTurret.SetPositionAndRotation(newPos, newRotation);
+                detectionBoxT.SetPositionAndRotation(newPos, newRotation);
+
+                // Enable objects
+                ghostTurretObj.SetActive(true);
+                detectionBox.enabled = true;
+            }
+        }
+        else
+        {
+            ghostTurretObj.SetActive(false);
+            detectionBox.enabled = false;
         }
     }
+    #endregion
 
+    #region Create Turret
     private void CreateTurret()
     {
         Debug.Log("Turret Created at " + ghostTurret.position);
@@ -67,11 +100,25 @@ public class Unit_Place_Controller : MonoBehaviour
         Instantiate(turretPrefab, ghostTurret.position, Quaternion.identity);
         StartCoroutine(Cooldown());
     }
+    #endregion
 
+    #region Cooldown
     IEnumerator Cooldown()
     {
         yield return new WaitForSeconds(placementDelay);
         canCreateTurret = true;
         yield break;
+    }
+    #endregion
+
+    bool SufficentMoney() // Check if the player has enough money
+    {
+        if (GameManager.Money < 0) return true;
+        else return false;
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        
     }
 }
