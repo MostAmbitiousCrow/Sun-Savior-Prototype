@@ -4,14 +4,11 @@ using UnityEngine;
 
 public class Camera_Controller : MonoBehaviour
 {
-    [Header("Components")]
-    [SerializeField] private Camera mainCamera;
-
     [Header("Camera Script Variables")]
 
     [Tooltip("How fast the camera will move when panning")]
-    [SerializeField] private float smoothSpeed = 5;        // Smooth speed when the rotation is moving towards its target Y Value
-    [SerializeField] private float rotationSpeed = 50;     // Rotation speed 
+    [SerializeField] private float smoothSpeed = 5;        // Horizontal smooth speed when the rotation is moving towards its target Y Value
+    [SerializeField] private float rotationSpeed = 50;     // Horizontal rotation speed 
 
     [Tooltip("Right distance detection percentage")] [Range(0f, 100f)]
     [SerializeField] private float percentageHorizontalDetectionR = 85f; // Right distance detection
@@ -31,16 +28,16 @@ public class Camera_Controller : MonoBehaviour
     private float targetAngleX; // Target value for vertical rotation
     
     [Header("Birds Eye Variables")]
-    [SerializeField] private bool inBirdsEye;
-    [SerializeField] private float birdsEyeAngle = 60f;
-    [SerializeField] private float birdsEyeTime = .3f;
+    [SerializeField] private bool inBirdsEye; // True if birds eye is active
+    [SerializeField] private bool birdsEyeLocked; // True if birds eye rotation is locked
+    [SerializeField] private float birdsEyeAngle = 60f; // The X rotation of the birds eye
+    [SerializeField] private float birdsEyeTime = .3f; // Time to transition into birds eye
 
     private Coroutine birdsEyeRoutine;
 
     #region Start
     void Start()
     {
-        mainCamera = Camera.main; // Save the Main Camera Component
         UpdateScreenData();
     }
     #endregion
@@ -84,9 +81,20 @@ public class Camera_Controller : MonoBehaviour
             TransitionToBirdsEye(true);
         }
         // If we're moving out of Bird's Eye view
-        else if (posY <= VerticalDetectionU && inBirdsEye)
+        else if (posY <= VerticalDetectionU && inBirdsEye && !birdsEyeLocked)
         {
             TransitionToBirdsEye(false);
+        }
+        if (inBirdsEye)
+        {
+            if (!birdsEyeLocked && Input.GetMouseButtonDown(2))
+            {
+                birdsEyeLocked = true;
+            }
+            else if (Input.GetMouseButtonDown(2))
+            {
+                birdsEyeLocked = false;
+            }
         }
     }
 

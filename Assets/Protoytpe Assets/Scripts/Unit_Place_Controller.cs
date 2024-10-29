@@ -1,5 +1,6 @@
 using System.Collections;
 using Unity.Mathematics;
+using UnityEditor.ShaderGraph;
 using UnityEngine;
 
 public class Unit_Place_Controller : MonoBehaviour
@@ -17,8 +18,12 @@ public class Unit_Place_Controller : MonoBehaviour
 
     [Header("Control Variables")]
     [SerializeField] float placementDelay = .1f; // Timed delay between each Player Turret placement
-    private bool canCreateTurret; // Check if the player can create a new Turret
+    [SerializeField] bool canCreateTurret; // Check if the player can create a new Turret
     [SerializeField] LayerMask layerMask; // Ghost Movement Layermask
+    [SerializeField] Material ghostMaterial; // Ghost global material
+    [SerializeField] Color gMatT; // Ghost material colour when canCreateTurret is true
+    [SerializeField] Color gMatF; // Ghost material colour when canCreateTurret is false
+    private Quaternion newRotation;
 
     #region Start
     void Start()
@@ -47,8 +52,8 @@ public class Unit_Place_Controller : MonoBehaviour
         }
         else
         {
-            ghostTurretObj.SetActive(false);
-            detectionBox.enabled = false;
+            AllowTurretBuild(false);
+            ColliderTriggerExit();
         }
     }
     #endregion
@@ -66,29 +71,35 @@ public class Unit_Place_Controller : MonoBehaviour
             // Hit Collider and height Approximate check
             if (hit.collider != null && Mathf.Approximately(hitPosition.y, 0.5f))
             {
-                Debug.Log(hitPosition);
-
                 // Round y to the nearest tenth
                 Vector3 newPos = new(hitPosition.x, Mathf.Round(hitPosition.y * 10) / 10, hitPosition.z);
 
                 // Calulate roation to face away from the Tower
                 float rotationY = Quaternion.LookRotation(ghostTurret.position - towerPosition).eulerAngles.y;
-                Quaternion newRotation = Quaternion.Euler(0, rotationY, 0);
+                newRotation = Quaternion.Euler(0, rotationY, 0);
 
                 // Set positions and rotations
                 ghostTurret.SetPositionAndRotation(newPos, newRotation);
                 detectionBoxT.SetPositionAndRotation(newPos, newRotation);
 
                 // Enable objects
-                ghostTurretObj.SetActive(true);
-                detectionBox.enabled = true;
+                AllowTurretBuild(true);
+            }
+            else
+            {
+                AllowTurretBuild(false);
             }
         }
         else
         {
-            ghostTurretObj.SetActive(false);
-            detectionBox.enabled = false;
+            AllowTurretBuild(false);
         }
+    }
+    void AllowTurretBuild(bool state)
+    {
+        ghostTurretObj.SetActive(state);
+        detectionBox.enabled = state;
+        // canCreateTurret = state;
     }
     #endregion
 
@@ -97,7 +108,7 @@ public class Unit_Place_Controller : MonoBehaviour
     {
         Debug.Log("Turret Created at " + ghostTurret.position);
         canCreateTurret = false;
-        Instantiate(turretPrefab, ghostTurret.position, Quaternion.identity);
+        Instantiate(turretPrefab, ghostTurret.position, newRotation);
         StartCoroutine(Cooldown());
     }
     #endregion
@@ -113,12 +124,21 @@ public class Unit_Place_Controller : MonoBehaviour
 
     bool SufficentMoney() // Check if the player has enough money
     {
-        if (GameManager.Money < 0) return true;
+        if (GameManager.Money > 0) return true;
         else return false;
     }
 
-    private void OnTriggerStay(Collider other)
+    #region Collider Functions
+    public void ColliderTrigger()
     {
-        
+        canCreateTurret = false;
+        ghostMaterial.SetColor("_Color", gMatF);
     }
+
+    public void ColliderTriggerExit()
+    {
+        canCreateTurret = true;
+        ghostMaterial.SetColor("_Color", gMatT);
+    }
+    #endregion
 }
