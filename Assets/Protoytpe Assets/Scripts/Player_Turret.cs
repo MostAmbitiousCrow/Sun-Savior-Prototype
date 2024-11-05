@@ -36,7 +36,7 @@ public class Player_Turret : MonoBehaviour
         UpdateState(turretState);
     }
 
-    // Update is called once per frame
+    #region Update Turret State
     public void UpdateState(TurretState state)
     {
         turretState = state;
@@ -61,7 +61,9 @@ public class Player_Turret : MonoBehaviour
                 break;
         }
     }
+    #endregion
 
+    #region Find Closest Target
     // Credit https://discussions.unity.com/t/clean-est-way-to-find-nearest-object-of-many-c/409917
     Transform FindClosestTarget()
     {
@@ -81,7 +83,9 @@ public class Player_Turret : MonoBehaviour
         Debug.Log(gameObject.name + "'s Nearest Target is " + target.name);
         return target;
     } // Find closest enemy in list
+    #endregion
 
+    #region Begin Firing Routine
     private void BeginFiring(TurretState state)
     {
         if (state == turretState)
@@ -91,7 +95,9 @@ public class Player_Turret : MonoBehaviour
         if (currentRoutine != null) StopCoroutine(currentRoutine);
         currentRoutine = StartCoroutine(FiringRoutine());
     }
+    #endregion
 
+    #region Firing Coroutine
     private IEnumerator FiringRoutine() // Where the action takes place
     {
         float t = 0;
@@ -113,7 +119,9 @@ public class Player_Turret : MonoBehaviour
         }
         yield break;
     }
+    #endregion
 
+    #region Trigger Detection Zone
     private void OnTriggerEnter(Collider other)
     {
         if (emptyTargets)
@@ -134,4 +142,5 @@ public class Player_Turret : MonoBehaviour
         targetCount = -1;
         detectedTargets.Remove(other.transform);
     }
+    #endregion
 }
