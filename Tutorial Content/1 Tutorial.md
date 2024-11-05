@@ -43,6 +43,7 @@ These trigger zones will represent what area of our screen, in pixels, we can st
 **(Add possible improvement here. Mainly to consider screen resolution changes during playtime)**
 
 You'll need to toggle **Allow Fullscreen Switch** as to prevent the user from changing the screen width and height values during their playthrough.
+
 <img width="537" alt="Disable Fullscreen Switch" src="https://github.com/user-attachments/assets/f7e7b116-39d8-457e-b88f-96d6274492c7">
 
 ### 2. Camera Movement:
