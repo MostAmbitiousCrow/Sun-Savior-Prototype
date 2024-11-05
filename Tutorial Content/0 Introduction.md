@@ -3,7 +3,7 @@
 This project uses the Unity Asset Package attached to this tutorial. You can find the package here: *Insert Package Link Here*
 
 # Aim:
-The aim of this project is to create a 
+The aim of this project is to create a 3D tower defence game.
 
 This tutorial will cover camera controls which utilises the users cursor, purchasing and placing selected units from an inventory, creating an enemy wave spawn system, getting tower units to fire basic projectiles at enemies, and give the enemy units AI to move and attack towers.
 
@@ -13,10 +13,14 @@ This tutorial also includes extra advanced features...
 
 [[1. Camera Movement Tutorial]]
 
-[[2. Placing Tower Units Tutorial]]
+[[2. Tower Units Tutorial]]
 
-[[3. Enemy Unit Spawn System]]
+[[3. Enemy Units]]
 
 [[4. Tower Units Shooting]]
 
 [[5. Enemy Unit AI]]
+
+[[6. Tower Lane Lighting]]
+# Scene Setup
+
