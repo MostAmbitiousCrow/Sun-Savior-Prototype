@@ -137,7 +137,7 @@ public class Player_Turret : MonoBehaviour
         if (!emptyTargets)
         {
             emptyTargets = true;
-            StopCoroutine(currentRoutine); // Stop firing
+            if (currentRoutine != null) StopCoroutine(currentRoutine); // Stop firing
         }
         targetCount = -1;
         detectedTargets.Remove(other.transform);

@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class Character_Health_Script : MonoBehaviour
 {
     [Header("Health Variables")]
     public float maxHealth = 5;
     public float health = 0;
+    public UnityEvent triggerEvent; // New
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +31,7 @@ public class Character_Health_Script : MonoBehaviour
         health -= damage;
         if (health < 0)
         {
+            triggerEvent.Invoke(); // New
             Destroy(gameObject);
         }
     }

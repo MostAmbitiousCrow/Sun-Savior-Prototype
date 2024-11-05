@@ -1,15 +1,21 @@
 using System.Collections;
-using Unity.Mathematics;
-using UnityEditor.ShaderGraph;
 using UnityEngine;
 
 public class Unit_Place_Controller : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] GameObject turretPrefab; // Player Turret Prefab to create
+    [SerializeField] GameObject wallPrefab; // Player Wall Prefab to create
     [SerializeField] GameObject ghostTurretPrefab; // Player Ghost Turret Prefab to create
+    [SerializeField] GameObject ghostWallPrefab; // Player Ghost Wall Prefab to create // New
+
     [SerializeField] Transform ghostTurret; // Instantiated Ghost Turret Transform component
+    [SerializeField] Transform ghostWall; // Instantiated Ghost Wall Transform component // New
+
+    [SerializeField] Transform ghostObject; // Selected Ghost Object to Move.
     [SerializeField] GameObject ghostTurretObj; // Instantiated Ghost Turret GameObject component
+    [SerializeField] GameObject ghostWallObj; // Instantiated Ghost Wall GameObject component
+
     [SerializeField] Transform tower; // Player Tower Transform Component
     private Vector3 towerPosition; // Saved Tower Vector 3 coords
     [SerializeField] Camera mainCam; // Main Camera component
@@ -20,18 +26,31 @@ public class Unit_Place_Controller : MonoBehaviour
     [SerializeField] float placementDelay = .1f; // Timed delay between each Player Turret placement
     [SerializeField] bool canCreateTurret; // Check if the player can create a new Turret
     [SerializeField] LayerMask layerMask; // Ghost Movement Layermask
-    [SerializeField] Material ghostMaterial; // Ghost global material
-    [SerializeField] Color gMatT; // Ghost material colour when canCreateTurret is true
+    private enum SelectedUnit { Turret, Wall }
+    [SerializeField] SelectedUnit selectedUnit;
+
+    [Header("Materials")]
+    [SerializeField] Material ghostMaterialT; // Ghost turret material
+    [SerializeField] Material ghostMaterialW; // Ghost wall material    // New
+    [SerializeField] Color gMatT; // Ghost turret material colour when canCreateTurret is true
+    [SerializeField] Color gMatW; // Ghost wall material colour when canCreateTurret is true
     [SerializeField] Color gMatF; // Ghost material colour when canCreateTurret is false
     private Quaternion newRotation;
+
 
     #region Start
     void Start()
     {
         towerPosition = tower.position;
-        ghostTurretObj = Instantiate(ghostTurretPrefab, new Vector3(), Quaternion.identity);
-        ghostTurretObj.SetActive(false);
+        ghostTurretObj = Instantiate(ghostTurretPrefab, new Vector3(), Quaternion.identity); // Create Ghost Turret
         ghostTurret = ghostTurretObj.GetComponent<Transform>();
+        ghostTurretObj.SetActive(false);
+
+        ghostWallObj = Instantiate(ghostWallPrefab, new Vector3(), Quaternion.identity); // Create Ghost Wall
+        ghostWall = ghostWallObj.GetComponent<Transform>();
+        ghostWallObj.SetActive(false);
+
+        ghostObject = ghostTurretObj.transform;
     }
     #endregion
 
@@ -75,11 +94,11 @@ public class Unit_Place_Controller : MonoBehaviour
                 Vector3 newPos = new(hitPosition.x, Mathf.Round(hitPosition.y * 10) / 10, hitPosition.z);
 
                 // Calulate roation to face away from the Tower
-                float rotationY = Quaternion.LookRotation(ghostTurret.position - towerPosition).eulerAngles.y;
+                float rotationY = Quaternion.LookRotation(ghostObject.position - towerPosition).eulerAngles.y;
                 newRotation = Quaternion.Euler(0, rotationY, 0);
 
                 // Set positions and rotations
-                ghostTurret.SetPositionAndRotation(newPos, newRotation);
+                ghostObject.SetPositionAndRotation(newPos, newRotation);
                 detectionBoxT.SetPositionAndRotation(newPos, newRotation);
 
                 // Enable objects
@@ -97,18 +116,25 @@ public class Unit_Place_Controller : MonoBehaviour
     }
     void AllowTurretBuild(bool state)
     {
-        ghostTurretObj.SetActive(state);
+        ghostObject.gameObject.SetActive(state); // Changed
         detectionBox.enabled = state;
-        // canCreateTurret = state;
+        // Removed
     }
     #endregion
 
     #region Create Turret
     private void CreateTurret()
     {
-        Debug.Log("Turret Created at " + ghostTurret.position);
+        Debug.Log("Turret Created at " + ghostObject.position);
         canCreateTurret = false;
-        Instantiate(turretPrefab, ghostTurret.position, newRotation);
+        GameObject unit;
+        switch (selectedUnit)
+        {
+            case SelectedUnit.Turret: unit = turretPrefab; break;
+            case SelectedUnit.Wall: unit = wallPrefab; break;
+            default: unit = null; break;
+        }
+        Instantiate(unit, ghostObject.position, newRotation);
         StartCoroutine(Cooldown());
     }
     #endregion
@@ -132,13 +158,33 @@ public class Unit_Place_Controller : MonoBehaviour
     public void ColliderTrigger()
     {
         canCreateTurret = false;
-        ghostMaterial.SetColor("_Color", gMatF);
+        //ghostMaterial.SetColor("_Color", gMatF); // Changed
+        ghostMaterialW.color = gMatF; // New
+        ghostMaterialT.color = gMatF; // New
     }
 
     public void ColliderTriggerExit()
     {
         canCreateTurret = true;
-        ghostMaterial.SetColor("_Color", gMatT);
+        //ghostMaterial.SetColor("_Color", gMatT); // Changed
+        ghostMaterialT.color = gMatT; // New
+        ghostMaterialW.color = gMatW; // New
     }
     #endregion
+
+    // New
+    public void SelectUnit(int unitNum)
+    {
+        switch (unitNum)
+        {
+            case 0:
+                selectedUnit = SelectedUnit.Turret;
+                ghostObject = ghostTurret;
+                break;
+            case 1:
+                selectedUnit = SelectedUnit.Wall;
+                ghostObject = ghostWall;
+                break;
+        }
+    }
 }

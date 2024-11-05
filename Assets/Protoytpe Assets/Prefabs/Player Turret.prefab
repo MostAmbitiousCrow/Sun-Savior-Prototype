@@ -330,7 +330,7 @@ GameObject:
   - component: {fileID: 3620699228871895111}
   - component: {fileID: 8017353843601027215}
   m_Layer: 8
-  m_Name: Player Unit (Opaque)
+  m_Name: Player Turret
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -371,7 +371,7 @@ MonoBehaviour:
   projectileSpawn: {fileID: 4764097502874621179}
   projectilePrefab: {fileID: 3561925968797990521, guid: 620876efbd4159b478a61ab30b8bd5fd,
     type: 3}
-  Body: {fileID: 9051142580885207784}
+  body: {fileID: 9051142580885207784}
   cachedProjectiles: []
   emptyTargets: 0
   currentTarget: {fileID: 0}
