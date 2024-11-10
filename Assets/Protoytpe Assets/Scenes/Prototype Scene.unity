@@ -131,10 +131,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2168961}
-  - component: {fileID: 2168962}
   m_Layer: 0
   m_Name: Tower
-  m_TagString: Tower
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -155,35 +154,6 @@ Transform:
   - {fileID: 875588989}
   m_Father: {fileID: 827881826}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2168962
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2168960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9b0acadbebd36840bf372959affbe0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 50
-  health: 0
-  triggerEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1872241555}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: GameOverEvent
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!64 &48106079
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -218,7 +188,6 @@ GameObject:
   - component: {fileID: 106628390}
   - component: {fileID: 106628389}
   - component: {fileID: 106628388}
-  - component: {fileID: 106628391}
   m_Layer: 5
   m_Name: Player UI
   m_TagString: Untagged
@@ -309,18 +278,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &106628391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 106628386}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ab268e0d6d61534c9038b5aeea76fc3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &130449820
 GameObject:
   m_ObjectHideFlags: 0
@@ -726,7 +683,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 2
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -908,84 +865,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 568796865}
   m_CullTransparentMesh: 1
---- !u!1001 &724767496
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1225065281388997003, guid: 66753156f0ebccd41af86781007a271c,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -15
-      objectReference: {fileID: 0}
-    - target: {fileID: 1225065281388997003, guid: 66753156f0ebccd41af86781007a271c,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1225065281388997003, guid: 66753156f0ebccd41af86781007a271c,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -3.2314444
-      objectReference: {fileID: 0}
-    - target: {fileID: 1225065281388997003, guid: 66753156f0ebccd41af86781007a271c,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1225065281388997003, guid: 66753156f0ebccd41af86781007a271c,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1225065281388997003, guid: 66753156f0ebccd41af86781007a271c,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1225065281388997003, guid: 66753156f0ebccd41af86781007a271c,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1225065281388997003, guid: 66753156f0ebccd41af86781007a271c,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1225065281388997003, guid: 66753156f0ebccd41af86781007a271c,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1225065281388997003, guid: 66753156f0ebccd41af86781007a271c,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4358377745841459033, guid: 66753156f0ebccd41af86781007a271c,
-        type: 3}
-      propertyPath: m_Name
-      value: Enemy
-      objectReference: {fileID: 0}
-    - target: {fileID: 6716581943559896098, guid: 66753156f0ebccd41af86781007a271c,
-        type: 3}
-      propertyPath: m_Constraints
-      value: 84
-      objectReference: {fileID: 0}
-    - target: {fileID: 8940908534231894575, guid: 66753156f0ebccd41af86781007a271c,
-        type: 3}
-      propertyPath: m_ExcludeLayers.m_Bits
-      value: 64
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 66753156f0ebccd41af86781007a271c, type: 3}
 --- !u!1 &827881825
 GameObject:
   m_ObjectHideFlags: 0
@@ -1349,7 +1228,7 @@ GameObject:
   - component: {fileID: 875588990}
   - component: {fileID: 875588993}
   m_Layer: 8
-  m_Name: Mesh
+  m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2315,9 +2194,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 410087041}
   - {fileID: 832575519}
-  - {fileID: 403298148}
   - {fileID: 282000405}
   - {fileID: 130449821}
   - {fileID: 827881826}
+  - {fileID: 403298148}
   - {fileID: 1872241554}
-  - {fileID: 724767496}
