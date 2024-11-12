@@ -118,7 +118,6 @@ public class Unit_Place_Controller : MonoBehaviour
     {
         ghostObject.gameObject.SetActive(state); // Changed
         detectionBox.enabled = state;
-        // Removed
     }
     #endregion
 
@@ -127,13 +126,12 @@ public class Unit_Place_Controller : MonoBehaviour
     {
         Debug.Log("Turret Created at " + ghostObject.position);
         canCreateTurret = false;
-        GameObject unit;
-        switch (selectedUnit)
+        GameObject unit = selectedUnit switch
         {
-            case SelectedUnit.Turret: unit = turretPrefab; break;
-            case SelectedUnit.Wall: unit = wallPrefab; break;
-            default: unit = null; break;
-        }
+            SelectedUnit.Turret => turretPrefab,
+            SelectedUnit.Wall => wallPrefab,
+            _ => null,
+        };
         Instantiate(unit, ghostObject.position, newRotation);
         StartCoroutine(Cooldown());
     }
@@ -173,7 +171,7 @@ public class Unit_Place_Controller : MonoBehaviour
     #endregion
 
     // New
-    public void SelectUnit(int unitNum)
+    public void SelectUnit(int unitNum) // Select Player Unit
     {
         switch (unitNum)
         {

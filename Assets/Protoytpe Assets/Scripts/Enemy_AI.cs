@@ -16,8 +16,6 @@ public class Enemy_AI : MonoBehaviour
     {
         tower = GameObject.FindWithTag("Tower").transform;
         direction = Quaternion.LookRotation(transform.position - tower.position);
-        //direction = Quaternion.Euler(0, direction.y, 0);
-        //direction.y *= -1;
         transform.rotation = direction;
         rb.velocity = transform.forward * -speed;
     }
