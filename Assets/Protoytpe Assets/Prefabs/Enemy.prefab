@@ -131,8 +131,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 370ece58e98b5a64caf0b348fdd40ae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 1
   tower: {fileID: 1225065281388997003}
+  rayDistance: 5
+  unitLayer:
+    serializedVersion: 2
+    m_Bits: 256
   rb: {fileID: 6716581943559896098}
 --- !u!114 &1388476930784494383
 MonoBehaviour:
@@ -191,7 +195,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 192
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0

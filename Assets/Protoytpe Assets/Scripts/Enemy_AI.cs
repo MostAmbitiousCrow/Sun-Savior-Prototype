@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Enemy_AI : MonoBehaviour
@@ -6,10 +7,16 @@ public class Enemy_AI : MonoBehaviour
     [SerializeField] private float speed;
     public Transform tower;
     private Quaternion direction;
+    private bool attacking;
     [SerializeField] private float rayDistance;
     [SerializeField] private LayerMask unitLayer;
+    [SerializeField]
+    enum EnemyState { Moving, Attacking }
+    [SerializeField] EnemyState state = EnemyState.Moving;
+
     [Header("Components")]
     [SerializeField] private Rigidbody rb;
+    Coroutine routine;
 
     // Start is called before the first frame update
     void Start()
@@ -20,14 +27,39 @@ public class Enemy_AI : MonoBehaviour
         rb.velocity = transform.forward * -speed;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        RaycastHit hit;
+        Raycast();
+        if (!attacking) Moving();
+    }
+
+    void Raycast()
+    {
         Vector3 direction = transform.forward;
         Debug.DrawRay(transform.position, direction * rayDistance, Color.red);
-        if (Physics.Raycast(transform.position, transform.forward, out hit, rayDistance, unitLayer))
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, rayDistance, unitLayer))
+        {
+            attacking = true;
+            routine = StartCoroutine(Attack(hit.transform));
+        }
+        else
+        {
+            attacking = false;
+            StopCoroutine(routine);
+        }
+    }
+
+    void Moving()
+    {
+        rb.velocity = transform.forward * -speed;
+    }
+
+    IEnumerator Attack(Transform target)
+    {
+        while (true)
         {
             
         }
+        yield break;
     }
 }
