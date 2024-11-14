@@ -36,18 +36,14 @@ public class Camera_Controller : MonoBehaviour
     private Coroutine birdsEyeRoutine;
 
     #region Start
-    void Start()
-    {
-        UpdateScreenData();
-    }
+    void Start() => UpdateScreenData();
     #endregion
 
+
     #region Update
-    void Update()
-    {
-        UpdateRotation();
-    }
+    void Update() => UpdateRotation();
     #endregion
+
 
     #region Horizontal Cam Rotation
     // Rotates the camera pivot based on the direction of what side the players cursor is aimed at.

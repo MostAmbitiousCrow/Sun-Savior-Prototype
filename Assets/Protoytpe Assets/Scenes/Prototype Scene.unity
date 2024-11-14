@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 106628390}
   - component: {fileID: 106628389}
   - component: {fileID: 106628388}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Player UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -775,7 +775,7 @@ GameObject:
   - component: {fileID: 568796869}
   - component: {fileID: 568796868}
   - component: {fileID: 568796867}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -990,7 +990,7 @@ GameObject:
   - component: {fileID: 832617185}
   - component: {fileID: 832617184}
   - component: {fileID: 832617183}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1122,7 +1122,7 @@ GameObject:
   - component: {fileID: 874802794}
   - component: {fileID: 874802796}
   - component: {fileID: 874802795}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1254,6 +1254,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 875588989}
+  - component: {fileID: 875588994}
   - component: {fileID: 875588992}
   - component: {fileID: 875588991}
   - component: {fileID: 875588990}
@@ -1380,6 +1381,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &875588994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 875588988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9b0acadbebd36840bf372959affbe0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 20
+  health: 0
+  triggerEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &966713689
 GameObject:
   m_ObjectHideFlags: 0
@@ -1391,7 +1409,7 @@ GameObject:
   - component: {fileID: 966713690}
   - component: {fileID: 966713692}
   - component: {fileID: 966713691}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1572,6 +1590,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 4358377745841459033, guid: 66753156f0ebccd41af86781007a271c,
     type: 3}
   activeEnemies: []
+  tower: {fileID: 2168961}
   numberOfSides: 5
   spawnerDistance: 15
   spawnerFolder: {fileID: 351429641}
@@ -1589,7 +1608,7 @@ GameObject:
   - component: {fileID: 1175866416}
   - component: {fileID: 1175866418}
   - component: {fileID: 1175866417}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Unit Selection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1666,7 +1685,7 @@ GameObject:
   - component: {fileID: 1197378624}
   - component: {fileID: 1197378626}
   - component: {fileID: 1197378625}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1801,7 +1820,7 @@ GameObject:
   - component: {fileID: 1556700544}
   - component: {fileID: 1556700543}
   - component: {fileID: 1556700542}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Hide Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1922,7 +1941,7 @@ GameObject:
   - component: {fileID: 1763303748}
   - component: {fileID: 1763303747}
   - component: {fileID: 1763303746}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Start Wave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2054,7 +2073,7 @@ GameObject:
   - component: {fileID: 1812970140}
   - component: {fileID: 1812970142}
   - component: {fileID: 1812970141}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2234,7 +2253,7 @@ GameObject:
   - component: {fileID: 1954018130}
   - component: {fileID: 1954018132}
   - component: {fileID: 1954018133}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Contents
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2350,7 +2369,7 @@ GameObject:
   - component: {fileID: 2031185912}
   - component: {fileID: 2031185913}
   - component: {fileID: 2031185914}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Unit Place Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2385,7 +2404,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 631
+    m_Bits: 119
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0

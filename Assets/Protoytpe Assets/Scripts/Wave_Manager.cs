@@ -34,6 +34,7 @@ public class Wave_Manager : MonoBehaviour
     [Header("Enemies")]
     [SerializeField] GameObject enemyPrefab;
     [SerializeField] List<GameObject> activeEnemies = new();
+    [SerializeField] Transform tower;
 
     [Header("Spawners Setup")]
     [SerializeField] int numberOfSides = 5;
@@ -83,15 +84,21 @@ public class Wave_Manager : MonoBehaviour
         int[] activeSpawners = activeWave.activeSpawners;
         int activeSpawnersCount = activeSpawners.Length;
         activeEnemies.Clear();
+        currentWave++; // Update Current Wave
 
         while (waveStarted)
         {
             timeElapsed += spawnRate;
 
             yield return new WaitForSeconds(spawnRate); // Enemy spawn cooldown
+
             int s = Random.Range(0, activeSpawnersCount);
             Transform st = enemySpawners[activeSpawners[s]];
-            activeEnemies.Add(Instantiate(enemyPrefab, st.position, st.rotation));
+            GameObject spawnedEnemy = Instantiate(enemyPrefab, st.position, st.rotation);
+            Enemy_AI sEScript = spawnedEnemy.GetComponent<Enemy_AI>();
+            sEScript.tower = tower;
+            sEScript.waveManager = this;
+            activeEnemies.Add(spawnedEnemy);
 
             if (timeElapsed >= activeWave.duration)
             {
@@ -108,5 +115,11 @@ public class Wave_Manager : MonoBehaviour
     {
         Transform st = enemySpawners[spawner].transform;
         activeEnemies.Add(Instantiate(enemyPrefab, st.position, st.rotation));
+    }
+
+    public void RemoveEnemy(GameObject enemy)
+    {
+        Debug.Log("Pooped on " + enemy.name);
+        activeEnemies.Remove(enemy);
     }
 }

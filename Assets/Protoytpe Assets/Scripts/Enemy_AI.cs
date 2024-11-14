@@ -1,11 +1,14 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Enemy_AI : MonoBehaviour
 {
     [Header("Enemy Variables")]
     [SerializeField] private float speed;
-    public Transform tower;
+    [SerializeField] private float damage = 1;
+    [SerializeField] private float attackRate = .5f;
     private Quaternion direction;
     private bool attacking;
     [SerializeField] private float rayDistance;
@@ -14,52 +17,91 @@ public class Enemy_AI : MonoBehaviour
     enum EnemyState { Moving, Attacking }
     [SerializeField] EnemyState state = EnemyState.Moving;
 
+    [Header("Attack Variables")]
+    [SerializeField] Vector3 attackBoxSize = new(1,1,1);
+    [SerializeField] Collider[] hitColliders;
+    [SerializeField] int prevLength = 0;
+
     [Header("Components")]
     [SerializeField] private Rigidbody rb;
+    [SerializeField] private Transform detectBoxPos;
+    [SerializeField] private Character_Health_Script hpScript;
+    public Wave_Manager waveManager;
+    public Transform tower;
+
     Coroutine routine;
 
     // Start is called before the first frame update
     void Start()
     {
-        tower = GameObject.FindWithTag("Tower").transform;
+        // tower = GameObject.FindWithTag("Tower").transform;
         direction = Quaternion.LookRotation(transform.position - tower.position);
         transform.rotation = direction;
         rb.velocity = transform.forward * -speed;
+        hpScript.triggerEvent.AddListener(() => waveManager.RemoveEnemy(gameObject));
     }
 
     private void FixedUpdate()
     {
-        Raycast();
+        AttackBoxDetect();
         if (!attacking) Moving();
     }
 
-    void Raycast()
+    void AttackBoxDetect()
     {
-        Vector3 direction = transform.forward;
-        Debug.DrawRay(transform.position, direction * rayDistance, Color.red);
-        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, rayDistance, unitLayer))
+        hitColliders = Physics.OverlapBox(detectBoxPos.position, attackBoxSize / 2, detectBoxPos.rotation, unitLayer);
+        int length = hitColliders.Length;
+        if (length == 0)
         {
-            attacking = true;
-            routine = StartCoroutine(Attack(hit.transform));
-        }
-        else
-        {
+            state = EnemyState.Moving;
             attacking = false;
-            StopCoroutine(routine);
+            prevLength = 0;
+            if (routine != null) StopCoroutine(routine);
         }
+        else if (length != prevLength)
+        {
+            state = EnemyState.Attacking;
+            prevLength = length;
+            attacking = true;
+            rb.velocity = new();
+            routine = StartCoroutine(Attack());
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        //Gizmo draw a cube where the OverlapBox is (positioned where your GameObject is as well as the given size)
+        Gizmos.DrawWireCube(detectBoxPos.position, attackBoxSize);
     }
 
     void Moving()
     {
-        rb.velocity = transform.forward * -speed;
+        rb.velocity = -transform.forward * speed;
     }
 
-    IEnumerator Attack(Transform target)
+    IEnumerator Attack()
     {
-        while (true)
+        List<Character_Health_Script> HSs = new();
+        foreach (var item in hitColliders) HSs.Add(item.GetComponent<Character_Health_Script>());
+
+        while (attacking)
         {
-            
+            foreach (var item in HSs)
+            {
+                if (item != null) 
+                {
+                    item.Damage(damage);
+                    Debug.Log(gameObject.name + " Damaged " + item.name);
+                }
+            }
+            yield return new WaitForSeconds(attackRate);
         }
         yield break;
+    }
+
+    public void UpdateWaveManager()
+    {
+        waveManager.RemoveEnemy(gameObject);
     }
 }
