@@ -31,7 +31,6 @@ public class Enemy_AI : MonoBehaviour
 
     Coroutine routine;
 
-    // Start is called before the first frame update
     void Start()
     {
         // tower = GameObject.FindWithTag("Tower").transform;
@@ -70,9 +69,10 @@ public class Enemy_AI : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        Gizmos.matrix = detectBoxPos.localToWorldMatrix;
         Gizmos.color = Color.red;
         //Gizmo draw a cube where the OverlapBox is (positioned where your GameObject is as well as the given size)
-        Gizmos.DrawWireCube(detectBoxPos.position, attackBoxSize);
+        Gizmos.DrawWireCube(Vector3.zero, attackBoxSize);
     }
 
     void Moving()
@@ -92,7 +92,7 @@ public class Enemy_AI : MonoBehaviour
                 if (item != null) 
                 {
                     item.Damage(damage);
-                    Debug.Log(gameObject.name + " Damaged " + item.name);
+                    // Debug.Log(gameObject.name + " Damaged " + item.name);
                 }
             }
             yield return new WaitForSeconds(attackRate);

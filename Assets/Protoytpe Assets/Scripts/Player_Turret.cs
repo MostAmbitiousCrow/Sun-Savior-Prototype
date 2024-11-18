@@ -1,71 +1,63 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player_Turret : MonoBehaviour
 {
     [Header("Stats")]
-    [Tooltip("Time each projectile is fired")]
-    [SerializeField] private float fireRate = 1;
-    [SerializeField] private float turnSpeed = 1;
-    [SerializeField] private float damage = 1;
+    [SerializeField] private float fireRate = 1; // Time each projectile is fired
+    [SerializeField] private float turnSpeed = 1; // Speed in which the turret rotates towards an enemy
+    [SerializeField] private float damage = 1; // Damage the turret deals to an enemy
+    [SerializeField] private float detectionRadius = 6; // Sphere radius where the turret will detect enemy units
+    [SerializeField] private LayerMask enemyLayer; // Enemy collision layer the turret will detect
+    [SerializeField] private bool attacking; // Determines if the turret is attacking
+    private bool canshoot;
 
     [Header("Components")]
-    [SerializeField] Rigidbody rb;
-    [SerializeField] Transform projectileSpawn;
-    [SerializeField] GameObject projectilePrefab;
-    [SerializeField] Transform body;
-
-    [SerializeField] List<GameObject> cachedProjectiles;
+    [SerializeField] Rigidbody rb; // Roots rigidbody
+    [SerializeField] Transform projectileSpawn; // Start location where the projectile will emit (the gun)
+    [SerializeField] Transform body; // The turrets body in which the turret will rotate
+    [SerializeField] LineRenderer lineRenderer; // Line Renderer component (The Laser)
 
     [Header("Target Info")]
-    [SerializeField] private bool emptyTargets = true;
-    [SerializeField] Transform currentTarget;
-    [SerializeField] List<Transform> detectedTargets;
+    [SerializeField] Transform currentTarget; // Current target in which the turret is firing at
+    [SerializeField] Collider[] detectedTargets; // List of detected targets in detection radius
 
-    public enum TurretState { First, Last, Closest, Strongest }
-    [SerializeField] TurretState turretState = TurretState.First;
-    private TurretState currentState;
+    public enum TurretState { First, Last, Closest }
+    public TurretState turretState = TurretState.First; // Turrets current state
 
-    private Coroutine currentRoutine;
-    private int targetCount = 0;
+    private Coroutine routine; // Stored Coroutine
+    [SerializeField] int targetCount = 0; // Count of the list of detected targets
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        UpdateState(turretState);
-    }
+    void Start()=> UpdateState(turretState);
+    void Update() => DetectEnemies();
 
     #region Update Turret State
     public void UpdateState(TurretState state)
     {
+        if (state == turretState) return;
         turretState = state;
-        if (targetCount == 0) return;
-        switch (state)
-        {
-            case TurretState.First:
-                currentTarget = detectedTargets[0];
-                BeginFiring(TurretState.First);
-                break;
-            case TurretState.Last:
-                currentTarget = detectedTargets[targetCount - 1];
-                BeginFiring(TurretState.Last);
-                break;
-            case TurretState.Closest:
-                currentTarget = FindClosestTarget();
-                BeginFiring(TurretState.Closest);
-                break;
-            case TurretState.Strongest: // Maybe leave this. Could be too complex?
-
-                BeginFiring(TurretState.Strongest);
-                break;
-        }
     }
     #endregion
 
+    void GetTarget()
+    {
+        switch (turretState)
+        {
+            case TurretState.First:
+                currentTarget = detectedTargets[0].transform;
+                break;
+            case TurretState.Last:
+                currentTarget = detectedTargets[targetCount - 1].transform;
+                break;
+            case TurretState.Closest:
+                currentTarget = FindClosestTarget();
+                break;
+        }
+    }
+
     #region Find Closest Target
     // Credit https://discussions.unity.com/t/clean-est-way-to-find-nearest-object-of-many-c/409917
-    Transform FindClosestTarget()
+    Transform FindClosestTarget() // Find closest enemy in list
     {
         float minDist = Mathf.Infinity;
         Vector3 pos = transform.position;
@@ -73,74 +65,98 @@ public class Player_Turret : MonoBehaviour
         Transform target = null;
         foreach (var item in detectedTargets)
         {
-            float dist = Vector3.Distance(pos, item.position);
+            Transform itemT = item.transform;
+            float dist = Vector3.Distance(pos, itemT.position);
             if (dist < minDist)
             {
                 minDist = dist;
-                target = item;
+                target = itemT;
             }
         }
         Debug.Log(gameObject.name + "'s Nearest Target is " + target.name);
         return target;
-    } // Find closest enemy in list
+    } 
+    #endregion
+
+    #region Detect Enemies
+    void DetectEnemies()
+    {
+        detectedTargets = Physics.OverlapSphere(transform.position, detectionRadius, enemyLayer);
+        targetCount = detectedTargets.Length;
+        if (targetCount != 0 && !attacking)
+        {
+            attacking = true;
+            BeginFiring(); // Begin firing
+        }
+        else if (targetCount == 0)
+        {
+            attacking = false;
+            if (routine != null) StopCoroutine(routine); // Stop firing
+        }
+    }
     #endregion
 
     #region Begin Firing Routine
-    private void BeginFiring(TurretState state)
+    private void BeginFiring()
     {
-        if (state == turretState)
-        {
-            return;
-        }
-        if (currentRoutine != null) StopCoroutine(currentRoutine);
-        currentRoutine = StartCoroutine(FiringRoutine());
+        if (routine != null) StopCoroutine(routine);
+        routine = StartCoroutine(FiringRoutine());
+        Debug.Log("Began Firing");
     }
     #endregion
 
     #region Firing Coroutine
     private IEnumerator FiringRoutine() // Where the action takes place
     {
+        GetTarget();
         float t = 0;
         Vector3 pos = transform.position;
         Quaternion rot = Quaternion.identity;
-        while (!emptyTargets)
+        Character_Health_Script eHP = currentTarget.GetComponent<Character_Health_Script>();
+        Transform prevTarget = currentTarget;
+
+        while (attacking)
         {
+            GetTarget();
+
             float yRot = Quaternion.LookRotation(currentTarget.position - pos).eulerAngles.y;
             rot = Quaternion.RotateTowards(body.rotation, Quaternion.Euler(0, yRot, 0), turnSpeed);
             body.rotation = rot;
-
             t += Time.deltaTime;
+
             if (t > fireRate)
             {
-                //Instantiate() // Unfinished
-            }
+                t = 0;
+                canshoot = true;
+                if (prevTarget != currentTarget)
+                {
+                    prevTarget = currentTarget;
+                    eHP = currentTarget.GetComponent<Character_Health_Script>();
+                }
 
+                lineRenderer.SetPosition(0, projectileSpawn.position);
+                lineRenderer.SetPosition(1, new(currentTarget.position.x, projectileSpawn.position.y, currentTarget.position.z));
+                eHP.Damage(damage);
+                if (canshoot) StartCoroutine(BulletRoutine());
+            }
             yield return null;
         }
         yield break;
     }
+
+    IEnumerator BulletRoutine()
+    {
+        lineRenderer.enabled = true;
+        yield return new WaitForSeconds(Mathf.Clamp(.1f * fireRate, .01f, .1f));
+        lineRenderer.enabled = false;
+        canshoot = false;
+        yield break;
+    }
     #endregion
 
-    #region Trigger Detection Zone
-    private void OnTriggerEnter(Collider other)
+    void OnDrawGizmos()
     {
-        if (emptyTargets)
-        {
-            emptyTargets = false;
-            BeginFiring(turretState); // Continue firing
-        }
-        targetCount += 1;
-        detectedTargets.Add(other.transform);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
-    private void OnTriggerExit(Collider other)
-    {
-        if (!emptyTargets)
-        {
-            emptyTargets = true;
-            if (currentRoutine != null) StopCoroutine(currentRoutine); // Stop firing
-        }
-        targetCount = -1;
-        detectedTargets.Remove(other.transform);
-    }
-    #endregion
 }

@@ -8,20 +8,7 @@ public class Character_Health_Script : MonoBehaviour
     public float health = 0;
     public UnityEvent triggerEvent; // New
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        health = maxHealth;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetButtonDown("Jump"))
-        {
-            Damage(.5f);
-        }
-    }
+    void Start() => health = maxHealth;
 
     public void Damage(float damage)
     {
@@ -33,8 +20,5 @@ public class Character_Health_Script : MonoBehaviour
         }
     }
 
-    public void Heal(float heal)
-    {
-        health += heal;
-    }
+    public void Heal(float heal) => health += heal;
 }
