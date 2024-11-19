@@ -9,15 +9,30 @@ public class Wave_Manager : MonoBehaviour
     public enum WaveMode { WavesInOrder, WavesEndless }
     [SerializeField] WaveMode mode = WaveMode.WavesInOrder;
 
-    [System.Serializable] public struct Wave
+    [System.Serializable] public class Wave
     {
-        public float duration; // Duration of the wave
-        public float spawnRate; // Time per rain pattern
-        public int maxEnemies; // Falling Objects to spawn
-        public int[] activeSpawners; // What spawners will be active, allowing enemies to spawn
+        [System.Serializable] public struct Spawn 
+        {
+            [Tooltip("Which spawner (from 0 to max spawners) should the enemies spawn from")]
+            public int activeSpawner;
+            [Tooltip("Maximum number of enemies to spawn this wave, from the given spawner")]
+            public int maxEnemiesToSpawn;
+            [Tooltip("Time, in seconds, it takes for an enemy to spawn")]
+            public float spawnRate;
+        }
+        [SerializeField] public List<Spawn> spawnInfo = new();
+
+        //[Tooltip("Duration of the Wave")]
+        //public float duration; // Duration of the wave
+        //[Tooltip("Spawn rate of enemies, in seconds")]
+        //public float spawnRate; // The maximum amount of enemies that can spawn
+        //[Tooltip("The maximum amount of enemies that can spawn")]
+        //public int maxEnemies; // Falling Objects to spawn
+        //[Tooltip("")]
+        //public int[] activeSpawners; // What spawners will be active, allowing enemies to spawn
     }
     [SerializeField] List<Wave> waveInfo = new();
-    [SerializeField] int currentWave;
+
 
     [SerializeField]
     struct EndlessWave
@@ -30,11 +45,14 @@ public class Wave_Manager : MonoBehaviour
     [Header("Game Stats")]
     [SerializeField] float timeElapsed = 0;
     public bool gameStarted = false;
+    private int wavesCount;
+    [SerializeField] int currentWave;
 
     [Header("Enemies")]
     [SerializeField] GameObject enemyPrefab;
     [SerializeField] List<GameObject> activeEnemies = new();
     [SerializeField] Transform tower;
+    [SerializeField] int enemiesLeft = 0;
 
     [Header("Spawners Setup")]
     [SerializeField] int numberOfSides = 5;
@@ -43,9 +61,11 @@ public class Wave_Manager : MonoBehaviour
     [SerializeField] GameObject spawnerPrefab;
     [SerializeField] List<Transform> enemySpawners;
 
-    // Update is called once per frame
+    private List<Coroutine> spawnerRoutines = new();
+
     void Start() // Create Enemy Spawners
     {
+        wavesCount = waveInfo.Count;
         for (int i = 0; i < numberOfSides; i++)
         {
             float rot = (360 / numberOfSides) * i;
@@ -64,62 +84,74 @@ public class Wave_Manager : MonoBehaviour
 
     public void StartNextWave()
     {
-        StartCoroutine(WaveTimer());
+        if (currentWave != wavesCount) StartCoroutine(WaveTimer());
+        else print("No more Waves");
     }
 
     public void StopCurrentWave()
     {
-        activeEnemies.Clear();
+        ClearEnemies();
         StopCoroutine(WaveTimer());
     }
 
     IEnumerator WaveTimer()
     {
+        activeEnemies.Clear();
         timeElapsed = 0;
         waveStarted = true;
-        Wave activeWave = waveInfo[currentWave];
-        float duration = activeWave.duration;
-        float spawnRate = activeWave.spawnRate;
-        int maxEnemies = activeWave.maxEnemies;
-        int[] activeSpawners = activeWave.activeSpawners;
-        int activeSpawnersCount = activeSpawners.Length;
-        activeEnemies.Clear();
-        currentWave++; // Update Current Wave
-
-        while (waveStarted)
+        print("New" + waveInfo[currentWave].spawnInfo.Count);
+        for (int i = 0; i < waveInfo[currentWave].spawnInfo.Count; i++)
         {
-            timeElapsed += spawnRate;
+            StartCoroutine(SpawnEnemies(waveInfo[currentWave].spawnInfo[i]));
+        }
+        currentWave++; // Update Current Wave
+        
+        while (enemiesLeft != 0) yield return null;
 
-            yield return new WaitForSeconds(spawnRate); // Enemy spawn cooldown
+        waveStarted = false;
+        yield break;
+    }
 
-            int s = Random.Range(0, activeSpawnersCount);
-            Transform st = enemySpawners[activeSpawners[s]];
-            GameObject spawnedEnemy = Instantiate(enemyPrefab, st.position, st.rotation);
+    IEnumerator SpawnEnemies(Wave.Spawn spawnInfo)
+    {
+        float spawnrate = spawnInfo.spawnRate;
+        enemySpawners[spawnInfo.activeSpawner].GetPositionAndRotation(out Vector3 spawnpos, out Quaternion spawnrot);
+        int enemiesToSpawn = spawnInfo.maxEnemiesToSpawn;
+
+        for (int i  = 0; i  < enemiesToSpawn; i ++)
+        {
+            timeElapsed += spawnrate;
+            print("Waited for " + spawnrate);
+            yield return new WaitForSeconds(spawnrate); // Enemy spawn cooldown
+
+            GameObject spawnedEnemy = Instantiate(enemyPrefab, spawnpos, spawnrot);
             Enemy_AI sEScript = spawnedEnemy.GetComponent<Enemy_AI>();
             sEScript.tower = tower;
             sEScript.waveManager = this;
             activeEnemies.Add(spawnedEnemy);
-
-            if (timeElapsed >= activeWave.duration)
-            {
-                waveStarted = false;
-            }
-
+            enemiesLeft++;
             yield return null;
         }
+        print("Coroutine Completed");
 
         yield break;
     }
 
-    void SpawnEnemy(int spawner)
-    {
-        Transform st = enemySpawners[spawner].transform;
-        activeEnemies.Add(Instantiate(enemyPrefab, st.position, st.rotation));
-    }
+    //void SpawnEnemy(int spawner)
+    //{
+    //    Transform st = enemySpawners[spawner].transform;
+    //    activeEnemies.Add(Instantiate(enemyPrefab, st.position, st.rotation));
+    //}
 
     public void RemoveEnemy(GameObject enemy)
     {
-        Debug.Log("Pooped on " + enemy.name);
+        Debug.Log("Removed " + enemy.name);
         activeEnemies.Remove(enemy);
+        enemiesLeft--;  
+    }
+    public void ClearEnemies()
+    {
+        foreach (var item in activeEnemies) Destroy(item);
+        activeEnemies.Clear();
     }
 }

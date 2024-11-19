@@ -1580,13 +1580,13 @@ MonoBehaviour:
   waveStarted: 0
   mode: 0
   waveInfo:
-  - duration: 10
-    spawnRate: 1
-    maxEnemies: 10
-    activeSpawners: 0000000003000000
-  currentWave: 0
+  - spawnInfo:
+    - activeSpawner: 0
+      maxEnemiesToSpawn: 0
+      spawnRate: 0
   timeElapsed: 0
   gameStarted: 0
+  currentWave: 0
   enemyPrefab: {fileID: 4358377745841459033, guid: 66753156f0ebccd41af86781007a271c,
     type: 3}
   activeEnemies: []
