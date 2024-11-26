@@ -1582,8 +1582,11 @@ MonoBehaviour:
   waveInfo:
   - spawnInfo:
     - activeSpawner: 0
-      maxEnemiesToSpawn: 0
-      spawnRate: 0
+      maxEnemiesToSpawn: 1
+      spawnRate: 1
+    - activeSpawner: 1
+      maxEnemiesToSpawn: 1
+      spawnRate: 10
   timeElapsed: 0
   gameStarted: 0
   currentWave: 0
@@ -1591,6 +1594,7 @@ MonoBehaviour:
     type: 3}
   activeEnemies: []
   tower: {fileID: 2168961}
+  enemiesLeft: 0
   numberOfSides: 5
   spawnerDistance: 15
   spawnerFolder: {fileID: 351429641}

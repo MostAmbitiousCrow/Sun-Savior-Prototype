@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
+using static UnityEditor.Progress;
+using static Wave_Manager;
 
 public class Wave_Manager : MonoBehaviour
 {
@@ -11,25 +14,16 @@ public class Wave_Manager : MonoBehaviour
 
     [System.Serializable] public class Wave
     {
-        [System.Serializable] public struct Spawn 
+        [System.Serializable] public class Spawn 
         {
             [Tooltip("Which spawner (from 0 to max spawners) should the enemies spawn from")]
-            public int activeSpawner;
+            public int activeSpawner = 0;
             [Tooltip("Maximum number of enemies to spawn this wave, from the given spawner")]
-            public int maxEnemiesToSpawn;
+            public int maxEnemiesToSpawn = 1;
             [Tooltip("Time, in seconds, it takes for an enemy to spawn")]
-            public float spawnRate;
+            public float spawnRate = 1;
         }
         [SerializeField] public List<Spawn> spawnInfo = new();
-
-        //[Tooltip("Duration of the Wave")]
-        //public float duration; // Duration of the wave
-        //[Tooltip("Spawn rate of enemies, in seconds")]
-        //public float spawnRate; // The maximum amount of enemies that can spawn
-        //[Tooltip("The maximum amount of enemies that can spawn")]
-        //public int maxEnemies; // Falling Objects to spawn
-        //[Tooltip("")]
-        //public int[] activeSpawners; // What spawners will be active, allowing enemies to spawn
     }
     [SerializeField] List<Wave> waveInfo = new();
 
@@ -60,6 +54,7 @@ public class Wave_Manager : MonoBehaviour
     [SerializeField] Transform spawnerFolder;
     [SerializeField] GameObject spawnerPrefab;
     [SerializeField] List<Transform> enemySpawners;
+    private int pp = 0;
 
     private List<Coroutine> spawnerRoutines = new();
 
@@ -82,6 +77,53 @@ public class Wave_Manager : MonoBehaviour
         }
     }
 
+    #region "Validation Check"
+    private void OnValidate()
+    {
+        if (waveInfo.Count == 0) return;
+        for (int i = 0; i < waveInfo.Count; i++)
+        {
+            List<Wave.Spawn> spawn = waveInfo[i].spawnInfo;
+            if (spawn.Count > numberOfSides)
+            {
+                spawn.RemoveAt(numberOfSides);
+                Debug.Log("Too many spawners assigned to Wave. Max number of spawners are: " + numberOfSides);
+            }
+
+            List<int> availableSpawns = new();
+            for (int j = 0; j < numberOfSides; j++) availableSpawns.Add(j);
+            
+            for (int element = 0; element < spawn.Count; element++)
+            {
+                Wave.Spawn cSpawn = spawn[element];
+                if (availableSpawns.Contains(cSpawn.activeSpawner)) availableSpawns.Remove(cSpawn.activeSpawner);
+                else cSpawn.activeSpawner = cSpawn.activeSpawner++;
+                
+                if (cSpawn.spawnRate < 0.01f)
+                {
+                    cSpawn.spawnRate = 0.01f;
+                    Debug.Log("Enemy Spawn Rate can't be lower than 0.01.");
+                }
+                if (cSpawn.activeSpawner < 0)
+                {
+                    cSpawn.activeSpawner = 0;
+                    Debug.Log("Selected Spawner can't be lower than 0.");
+                }
+                if (cSpawn.activeSpawner > numberOfSides)
+                {
+                    cSpawn.activeSpawner = numberOfSides;
+                    Debug.Log("Selected Spawner can't be higher than the max Number of Sides.");
+                }
+                if (cSpawn.maxEnemiesToSpawn < 1)
+                {
+                    cSpawn.maxEnemiesToSpawn = 1;
+                    Debug.Log("At least one enemy needs to spawn.");
+                }
+            }
+        }
+    }
+    #endregion
+
     public void StartNextWave()
     {
         if (currentWave != wavesCount) StartCoroutine(WaveTimer());
@@ -98,17 +140,21 @@ public class Wave_Manager : MonoBehaviour
     {
         activeEnemies.Clear();
         timeElapsed = 0;
-        waveStarted = true;
         print("New" + waveInfo[currentWave].spawnInfo.Count);
         for (int i = 0; i < waveInfo[currentWave].spawnInfo.Count; i++)
         {
             StartCoroutine(SpawnEnemies(waveInfo[currentWave].spawnInfo[i]));
+            pp++;
         }
         currentWave++; // Update Current Wave
-        
-        while (enemiesLeft != 0) yield return null;
+        waveStarted = true;
 
+        while (pp > 0) yield return null;
+        while (enemiesLeft > 0) yield return null;
+
+        yield return new WaitForSeconds(3); // Delay before the wave ends
         waveStarted = false;
+
         yield break;
     }
 
@@ -123,31 +169,30 @@ public class Wave_Manager : MonoBehaviour
             timeElapsed += spawnrate;
             print("Waited for " + spawnrate);
             yield return new WaitForSeconds(spawnrate); // Enemy spawn cooldown
+            SpawnEnemy(spawnpos, spawnrot);
 
-            GameObject spawnedEnemy = Instantiate(enemyPrefab, spawnpos, spawnrot);
-            Enemy_AI sEScript = spawnedEnemy.GetComponent<Enemy_AI>();
-            sEScript.tower = tower;
-            sEScript.waveManager = this;
-            activeEnemies.Add(spawnedEnemy);
-            enemiesLeft++;
             yield return null;
         }
-        print("Coroutine Completed");
-
+        //print("Coroutine Completed");
+        pp--;
         yield break;
     }
 
-    //void SpawnEnemy(int spawner)
-    //{
-    //    Transform st = enemySpawners[spawner].transform;
-    //    activeEnemies.Add(Instantiate(enemyPrefab, st.position, st.rotation));
-    //}
+    void SpawnEnemy(Vector3 spawnpos, Quaternion spawnrot)
+    {
+        GameObject spawnedEnemy = Instantiate(enemyPrefab, spawnpos, spawnrot);
+        Enemy_AI sEScript = spawnedEnemy.GetComponent<Enemy_AI>();
+        sEScript.tower = tower;
+        sEScript.waveManager = this;
+        activeEnemies.Add(spawnedEnemy);
+        enemiesLeft++;
+    }
 
     public void RemoveEnemy(GameObject enemy)
     {
         Debug.Log("Removed " + enemy.name);
         activeEnemies.Remove(enemy);
-        enemiesLeft--;  
+        enemiesLeft = activeEnemies.Count;
     }
     public void ClearEnemies()
     {

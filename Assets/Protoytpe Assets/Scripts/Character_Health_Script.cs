@@ -13,7 +13,7 @@ public class Character_Health_Script : MonoBehaviour
     public void Damage(float damage)
     {
         health -= damage;
-        if (health < 0)
+        if (health <= 0)
         {
             triggerEvent.Invoke(); // New
             Destroy(gameObject);
