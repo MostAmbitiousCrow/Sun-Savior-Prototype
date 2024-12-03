@@ -184,7 +184,7 @@ public class Wave_Manager : MonoBehaviour
             yield return null;
         }
         //print("Coroutine Completed");
-        pp--;
+         --;
         yield break;
     }
 

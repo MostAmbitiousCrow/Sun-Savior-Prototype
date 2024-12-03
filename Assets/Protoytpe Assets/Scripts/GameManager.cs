@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -7,6 +8,9 @@ public class GameManager : MonoBehaviour
     public static int Money {get ; set;}
     public static List<GameObject> activeEnemies;
     public static Camera_Controller camera_Controller;
+
+    [SerializeField] TextMeshProUGUI announcementText;
+    [SerializeField] TextMeshProUGUI enemyCountText;
     
     void Start()
     {
