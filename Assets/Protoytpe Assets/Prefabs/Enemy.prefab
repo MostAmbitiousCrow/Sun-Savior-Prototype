@@ -173,6 +173,7 @@ MonoBehaviour:
   state: 0
   attackBoxSize: {x: 1, y: 1.5, z: 1}
   hitColliders: []
+  prevLength: 0
   rb: {fileID: 6716581943559896098}
   detectBoxPos: {fileID: 2046497952061506695}
   hpScript: {fileID: 1388476930784494383}

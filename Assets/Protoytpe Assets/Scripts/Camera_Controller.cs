@@ -41,7 +41,11 @@ public class Camera_Controller : MonoBehaviour
 
 
     #region Update
-    void Update() => UpdateRotation();
+    void Update()
+    {
+        UpdateRotation();
+        if (Input.GetKeyDown(KeyCode.F)) UpdateScreenData();
+    }
     #endregion
 
 

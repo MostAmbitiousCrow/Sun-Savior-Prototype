@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using static UnityEditor.Progress;
@@ -14,6 +15,7 @@ public class Wave_Manager : MonoBehaviour
 
     [System.Serializable] public class Wave
     {
+        [Tooltip("List of individual Spawner Info. The list is limited to how many sides the shape has.")]
         [System.Serializable] public class Spawn 
         {
             [Tooltip("Which spawner (from 0 to max spawners) should the enemies spawn from")]
@@ -28,13 +30,15 @@ public class Wave_Manager : MonoBehaviour
     [SerializeField] List<Wave> waveInfo = new();
 
 
-    [SerializeField]
-    struct EndlessWave
-    {
-        float duration; // Duration of the wave
-        float spawnRate; // Time per rain pattern
-        int maxEnemies; // Overall number of enemies to spawn
-    }
+    [SerializeField] float minMaxSpawnRange = 1;
+
+    //[SerializeField]
+    //struct EndlessWave
+    //{
+    //    float duration; // Duration of the wave
+    //    float spawnRate; // Time per rain pattern
+    //    int maxEnemies; // Overall number of enemies to spawn
+    //}
 
     [Header("Game Stats")]
     [SerializeField] float timeElapsed = 0;
@@ -92,12 +96,13 @@ public class Wave_Manager : MonoBehaviour
 
             List<int> availableSpawns = new();
             for (int j = 0; j < numberOfSides; j++) availableSpawns.Add(j);
-            
+            //for (int j = 0; j < numberOfSides; j++) print(availableSpawns[j]);
+
             for (int element = 0; element < spawn.Count; element++)
             {
                 Wave.Spawn cSpawn = spawn[element];
                 if (availableSpawns.Contains(cSpawn.activeSpawner)) availableSpawns.Remove(cSpawn.activeSpawner);
-                else cSpawn.activeSpawner = cSpawn.activeSpawner++;
+                else cSpawn.activeSpawner = availableSpawns.First();
                 
                 if (cSpawn.spawnRate < 0.01f)
                 {
@@ -120,6 +125,7 @@ public class Wave_Manager : MonoBehaviour
                     Debug.Log("At least one enemy needs to spawn.");
                 }
             }
+            //for (int j = 0; j < availableSpawns.Count; j++) print(availableSpawns[j]);
         }
     }
     #endregion
@@ -164,12 +170,16 @@ public class Wave_Manager : MonoBehaviour
         enemySpawners[spawnInfo.activeSpawner].GetPositionAndRotation(out Vector3 spawnpos, out Quaternion spawnrot);
         int enemiesToSpawn = spawnInfo.maxEnemiesToSpawn;
 
+        Transform spawner = enemySpawners[spawnInfo.activeSpawner];
+        Vector3 spawnerPos = spawner.position;
+
         for (int i  = 0; i  < enemiesToSpawn; i ++)
         {
             timeElapsed += spawnrate;
-            print("Waited for " + spawnrate);
+            //print("Waited for " + spawnrate);
             yield return new WaitForSeconds(spawnrate); // Enemy spawn cooldown
-            SpawnEnemy(spawnpos, spawnrot);
+
+            SpawnEnemy(spawnpos + (spawner.right * Random.Range(-minMaxSpawnRange, minMaxSpawnRange)), spawnrot);
 
             yield return null;
         }
