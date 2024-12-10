@@ -3,24 +3,31 @@
 This project uses the Unity Asset Package attached to this tutorial. You can find the package here: *Insert Package Link Here*
 
 # Aim:
-The aim of this project is to create a 3D tower defence game.
+The aim of this tutorial is to create a 3D tower defence prototype.
 
-This tutorial will cover camera controls which utilises the users cursor, purchasing and placing selected units from an inventory, creating an enemy wave spawn system, getting tower units to fire basic projectiles at enemies, and give the enemy units AI to move and attack towers.
+The will learn how to create pivot camera controls which utilises the users cursor to rotate around the centre of the playing field, purchasing and placing selected units from an inventory, creating an enemy wave spawn system, getting tower units to fire basic projectiles at enemies, and give the enemy units AI to move and attack towers.
 
-This tutorial also includes extra advanced features...
+# You Will Learn:
+- How to calculate screen resolution and detect inputs based on screen size coordinates.
+- How to rotate objects around a pivot.
+- How to instantiate objects onto mesh surfaces.
+- Use Unity's UI system to select player assigned Units.
+- 
+
+# Skill Requirements
+- Basic Familiarity with Unity's user interface and workflow.
+- Basic understanding of Unity C#.
+- 
 
 # Contents:
 
-[[1. Camera Movement Tutorial]]
+[1. Camera Movement Tutorial](#1-Tutorial)
 
-[[2. Tower Units Tutorial]]
+[2. Tower Units Tutorial](#2-Tutorial)
 
-[[3. Enemy Units]]
+[3. Enemy Units](#3-Tutorial)
 
-[[4. Tower Units Shooting]]
+[4. Tower Units Shooting](#4-Tutorial)
 
-[[5. Enemy Unit AI]]
-
-[[6. Tower Lane Lighting]]
 # Scene Setup
 
