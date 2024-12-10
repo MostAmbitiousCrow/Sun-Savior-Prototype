@@ -1,3 +1,5 @@
+# Camera Pivot Controls
+
 First, create a scripts folder and create a new C# script with the name 'Camera_Controller' and attach it to the **Camera Controller** GameObject.
 
 ### 1. Getting Our Screen Values
@@ -26,9 +28,11 @@ private float targetAngleY; // Target value for horizontal rotation
 private float targetAngleX; // Target value for vertical rotation
 ```
 
->**TIP:** Using [Tooltip()] will give your variable a description, viewable in the inspector by hovering your cursor over the name of the variable, based on a string input. While not always necessary, it can help you remember what variables do without having to open your scripts to find out!
+> [!TIP]
+> Using [Tooltip()] will give your variable a description, viewable in the inspector by hovering your cursor over the name of the variable, based on a string input. While not always necessary, it can help you remember what variables do without having to open your scripts to find out!
 
->**TIP:** Using [Range()] will restrict your variable value from the smallest value (left), to the highest value (right). It will also show the value as a slider in the inspector, perfect for easy value changes!
+> [!TIP]
+> Using [Range()] will restrict your variable value from the smallest value (left), to the highest value (right). It will also show the value as a slider in the inspector, perfect for easy value changes!
 
 Let's begin by setting our key screen size variables in a new public custom Function named **UpdateScreenData**, and trigger this in the **Start()** function. We'll do this by getting the screen width and height and calculating the percentage values for our Horizontal and Vertical trigger zones.
 ```cs
@@ -40,11 +44,12 @@ VerticalDetectionU = screenSizeY * (percentageVerticalDetectionU / 100); // Set 
 ```
 These trigger zones will represent what area of our screen, in pixels, we can start moving the camera.
 
-**(Add possible improvement here. Mainly to consider screen resolution changes during playtime)**
+> [!NOTE]
+> **(Add possible improvement here. Mainly to consider screen resolution changes during playtime)**
 
-You'll need to toggle **Allow Fullscreen Switch** as to prevent the user from changing the screen width and height values during their playthrough.
-
-<img width="537" alt="Disable Fullscreen Switch" src="https://github.com/user-attachments/assets/f7e7b116-39d8-457e-b88f-96d6274492c7">
+> [!IMPORTANT]
+> You'll need to toggle **Allow Fullscreen Switch** as to prevent the user from changing the screen width and height values during their playthrough.
+> <img width="537" alt="Disable Fullscreen Switch" src="https://github.com/user-attachments/assets/51a9c4ef-c3de-4239-88d2-3f40f84d4849">
 
 ### 2. Camera Movement:
 #### Horizontal Movement:
@@ -71,8 +76,8 @@ if (posX > horizontalDetectionR)
 }
 ```
 We're changing the Y value because, in a 3D space, the Y rotation would rotate the object by it's **Yaw**. Here is a diagram that visualises this:
-![Yaw, Roll and Pitch Diagram](https://github.com/user-attachments/assets/cd209171-a0aa-4ef0-844d-95cc8126887b)
 
+![Yaw, Roll and Pitch Diagram](https://github.com/user-attachments/assets/231ba2a3-d8f0-42e4-943a-916969130c72)
 
 Again, we now determine if the mouse has exceeded the detection on the left. Making sure that the **targetAngleY** variable is set back to -180 as to avoid high values.
 ```cs
@@ -94,8 +99,8 @@ transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.d
 
 #### Your camera controls should look like something like this: 
 
-https://github.com/user-attachments/assets/7861f3da-40d6-4e90-95b4-f03c1aa0400e
 
+https://github.com/user-attachments/assets/29033d37-d51e-4e08-a64b-3a37cbaab939
 
 #### Vertical Movement (Birds-Eye View):
 
@@ -149,7 +154,8 @@ Now, to to transition the camera, we're going to Lerp the angle towards the bird
 	}
 ```
 
->**TIP:** When using a **while** statement, make sure to always end it with **yield return null**. This will repeat the execution every frame until the condition is met. If not used, Unity will freeze and crash, because you'll be trying to call an infinite amount of executions with no frame to render afterwards.
+> [!TIP]
+> When using a **while** statement, make sure to always end it with **yield return null**. This will repeat the execution every frame until the condition is met. If not used, Unity will freeze and crash, because you'll be trying to call an infinite amount of executions with no frame to render afterwards.
 
 Then, we can set the target to the targets X rotation to ensure it's properly set at the end of the transition.
 ```cs
@@ -195,8 +201,19 @@ if (inBirdsEye)
 
 This should be your final result:
 
-https://github.com/user-attachments/assets/cf3abfa1-c36e-4bd7-8ede-37ddb70404f6
+https://github.com/user-attachments/assets/4ea04920-6ddf-46e5-ba95-998378a79413
+
+
+[**Next Tutorial:**](2-Tutorial)
+
 
 
 # Final Script
+
+
+
+
+
+
+
 
