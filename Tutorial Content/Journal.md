@@ -1,5 +1,3 @@
-# Sun-Savior-Prototype Journal
- 
 # **Week 1:**
 
 ### **Tuesday 8th October**
@@ -30,7 +28,7 @@ I then investigated on how to create formatting for my notes to make it easier t
 [https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
 I then broke down the fundamentals of my prototype of what will be included in the written tutorial.
-<img width="630" alt="Screenshot 2024-10-17 at 13 05 17" src="https://github.com/user-attachments/assets/97cfd92e-0895-4bed-934f-15a161f3209f">
+<img width="630" alt="Screenshot 2024-10-17 at 13 05 17" src="https://github.com/user-attachments/assets/5ecf1903-3a8e-4bed-8cc3-00cc820c01f2" />
 
 I then discovered a brilliant app called **Obsidian**. **Obsidian** is a free programmers note app which uses the same written formatting techniques used in GitHub! So I can easily take notes here without having to constantly push changes and clutter history. (Though, I could just do that on a separate branch...)
 
@@ -109,7 +107,7 @@ Today I continued on some of my scripts. Mainly the Unit_Place_Controller script
 
 I also changed how the UI looks for selecting a player turret/unit, and am now anticipating adding extra functionality so it can be hidden by pressing a button or key, and units can be selected with numbers 1 and 2.
 
-<img width="819" alt="Screenshot 2024-10-26 at 17 45 57" src="https://github.com/user-attachments/assets/0a071b89-bbfa-4723-9496-1b881491e57f">
+<img width="819" alt="Screenshot 2024-10-26 at 17 45 57" src="https://github.com/user-attachments/assets/558d9a8d-46f8-40e7-900c-ad3496772ae3" />
 
 ### Sunday 27th October
 
@@ -133,3 +131,39 @@ One of these states was a "Strongest" state, where the turret would only target 
 
 Originally, I had the script change state based on if the State variable would change. This was being detected every frame. However, I decided to, and for the sake of performance, I would change this to be a single event. Therefore, I can simply update the turret when the object is created, defaulting it to the First State, and then, I can allow the player to click on the turret (Or possible UI) to change its State.
 
+# Week 5
+
+### Tuesday 5th November
+
+Today I decided to push the project a bit more and added a way for the player to select a Unit and then place it. This would outcome to the player being able to click a button, representing a Tower/Player Unit, and it would select that Unit, ready for placement. It also changes the ghost to represent that Unit too.
+
+<img width="1859" alt="Week 5 Turret + Wall Unit Showcase" src="https://github.com/user-attachments/assets/1205a9e2-9c2c-40e2-9ee4-a497b059f2c0" />
+
+
+I was able to utilise the power of Unity Events again. However, I was unable to call the **Unit_Place_Controller**'s enum variable. So, unable to find a solution, I instead used integers 
+### Sunday 10th November
+
+Updated Journal 2. I also decided to move the **Player Unit Controller** section of the **Placing Player Tower Units** tutorial to the **Enemy Units tutorial**, which will be renamed to **Player and Enemy Units**.
+
+### Tuesday 12th November
+
+Today I began the fourth tutorial, the Wave Manager. While Tutorial 2 and three aren't completed, I found myself getting stuck on the enemy AI script. I used a raycast for the enemy to detect player Units so I decided to start the script for the Wave Manager. By the end of the day I had created a starting point for me to work with when spawning the enemies such as a struct variable where I can assign variables to determine enemy count, time and which spawners the enemies will spawn at.
+
+### Thursday 14th November
+
+Today I continued the Enemy AI script and found a solution to the raycast issue I had on Tuesday. My problem before was that the ray didn't cover as much area to properly detect Player Units, causing it to collide with the object and spin off it's axis. However, using **Physics.OverlapBox**, I was able to fix this problem, and as a bonus: without using a collider.
+
+I wanted to share the Wave_Manager script with the spawned enemy object by adding a Unity Event listener to the enemy HP script. But it didn't quite work out. For some reason, when adding a listener to the hp Script, it simply wouldn't appear in the inspector, nor trigger... So, as an alternative, I just stuck to assigning the Wave Manager Script Component to the enemy so it can trigger the Wave Manager to remove the enemy from the list.
+
+My next step is to finish the player unit script and move on to finalising the Wave Manager and write the rest of the tutorials.
+
+### Tuesday 26th November:
+
+Today I experimented with Unity’s **OnValidate** event. This event is an Editor-only function which Unity will call whenever a script is loaded or a value is changed in the inspector.
+
+I’m using this to restrict values to stay within a range and update any of values if another value was changed. This is to reduce the amount of errors and checks I’ll have to add to the script, one of these being, as an example, if the player has added more spawns than the number of sides the shape.
+
+### Tuesday 3rd December:
+
+Completed the ‘active spawner’ restriction.
+Added a min/max spawn range to vary the enemy spawns.
