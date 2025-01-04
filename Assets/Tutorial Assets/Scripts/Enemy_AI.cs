@@ -100,8 +100,5 @@ public class Enemy_AI : MonoBehaviour
         yield break;
     }
 
-    public void UpdateWaveManager()
-    {
-        waveManager.RemoveEnemy(gameObject);
-    }
+    public void UpdateWaveManager() => waveManager.RemoveEnemy(gameObject);
 }

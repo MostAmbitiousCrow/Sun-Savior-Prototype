@@ -10,6 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 235461955316433686, guid: dd0e0bef970b84bd490a5a8dbb6cdcff,
         type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 235461955316433686, guid: dd0e0bef970b84bd490a5a8dbb6cdcff,
+        type: 3}
       propertyPath: m_ExcludeLayers.m_Bits
       value: 4294967295
       objectReference: {fileID: 0}

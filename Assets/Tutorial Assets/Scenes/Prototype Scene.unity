@@ -423,15 +423,6 @@ MonoBehaviour:
     type: 3}
   wallPrefab: {fileID: 628213375424483339, guid: 0989e6700b5065e4bada0151bf144183,
     type: 3}
-  ghostTurretPrefab: {fileID: 1854208513903269644, guid: 99dd4e940498f4b2bb13814509c6b115,
-    type: 3}
-  ghostWallPrefab: {fileID: 5323420128962674204, guid: ca324fba4041d684896fa437a968a613,
-    type: 3}
-  ghostTurret: {fileID: 0}
-  ghostWall: {fileID: 0}
-  ghostObject: {fileID: 0}
-  ghostTurretObj: {fileID: 0}
-  ghostWallObj: {fileID: 0}
   tower: {fileID: 2168961}
   mainCam: {fileID: 330585545}
   detectionBox: {fileID: 2031185913}
@@ -442,11 +433,22 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   selectedUnit: 0
-  ghostMaterialT: {fileID: 2100000, guid: c2816be3226294dd092c65cfd7491433, type: 2}
-  ghostMaterialW: {fileID: 2100000, guid: 8628bead1f904334fa1ffc48bd28ad05, type: 2}
-  gMatT: {r: 0.29803923, g: 0.7647059, b: 1, a: 0.5019608}
-  gMatW: {r: 0.8, g: 0.5294118, b: 0, a: 0.5019608}
-  gMatF: {r: 1, g: 0.2980392, b: 0.2980392, a: 0.5019608}
+  ghostUnit: {fileID: 3926719271561441580, guid: ebdaf5ddeb1ac44178e57b238ac49dbb,
+    type: 3}
+  trueColour: {r: 0, g: 1, b: 0, a: 1}
+  falseColour: {r: 1, g: 0, b: 0, a: 1}
+  ghostTransparency: 0.25
+  ghostUnitsInfo:
+  - unitName: Turret
+    unitMesh: {fileID: -6974796667786931620, guid: f81c733bbc7b34a7789aec44c78d50f1,
+      type: 3}
+    material: {fileID: 2100000, guid: 3a06014835d1349ba9b87b1b8b7b5329, type: 2}
+    detectBoxScale: {x: 1, y: 2, z: 1}
+  - unitName: Wall
+    unitMesh: {fileID: 1325642015796557052, guid: 8740c00e91f2d4e7cb7a7b8c7dd94c15,
+      type: 3}
+    material: {fileID: 2100000, guid: 492e0497021c55241b76c0b87a88ceb9, type: 2}
+    detectBoxScale: {x: 1, y: 2, z: 1}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1913,7 +1915,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1494845749
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2047,7 +2049,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1517131987
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2596,6 +2598,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5371a2c7eb5df4d3b8c62b727e335722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  announcementText: {fileID: 0}
+  enemyCountText: {fileID: 0}
 --- !u!1 &1954018128
 GameObject:
   m_ObjectHideFlags: 0
