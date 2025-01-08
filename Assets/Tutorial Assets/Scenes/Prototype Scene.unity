@@ -175,7 +175,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: -2432090755550338912, guid: 7f3506039d8f84d8d840cfffa08cac1c, type: 3}
+  m_Mesh: {fileID: -2432090755550338912, guid: 48b9cff78ec0c49faba217560f07b903, type: 3}
 --- !u!1 &106628386
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,12 +442,12 @@ MonoBehaviour:
   - unitName: Turret
     unitMesh: {fileID: -6974796667786931620, guid: f81c733bbc7b34a7789aec44c78d50f1,
       type: 3}
-    material: {fileID: 2100000, guid: 3a06014835d1349ba9b87b1b8b7b5329, type: 2}
+    unitMaterial: {fileID: 2100000, guid: 3a06014835d1349ba9b87b1b8b7b5329, type: 2}
     detectBoxScale: {x: 1, y: 2, z: 1}
   - unitName: Wall
     unitMesh: {fileID: 1325642015796557052, guid: 8740c00e91f2d4e7cb7a7b8c7dd94c15,
       type: 3}
-    material: {fileID: 2100000, guid: 492e0497021c55241b76c0b87a88ceb9, type: 2}
+    unitMaterial: {fileID: 2100000, guid: 492e0497021c55241b76c0b87a88ceb9, type: 2}
     detectBoxScale: {x: 1, y: 2, z: 1}
 --- !u!1 &330585543
 GameObject:
@@ -1656,22 +1656,7 @@ MonoBehaviour:
   waveStarted: 0
   mode: 0
   waveInfo:
-  - spawnInfo:
-    - activeSpawner: 0
-      maxEnemiesToSpawn: 10
-      spawnRate: 1
-    - activeSpawner: 1
-      maxEnemiesToSpawn: 20
-      spawnRate: 1
-    - activeSpawner: 2
-      maxEnemiesToSpawn: 5
-      spawnRate: 0.5
-    - activeSpawner: 3
-      maxEnemiesToSpawn: 5
-      spawnRate: 0.01
-    - activeSpawner: 4
-      maxEnemiesToSpawn: 10
-      spawnRate: 1
+  - spawnInfo: []
   minMaxSpawnRange: 1
   timeElapsed: 0
   gameStarted: 0
@@ -1681,7 +1666,16 @@ MonoBehaviour:
   activeEnemies: []
   tower: {fileID: 2168961}
   enemiesLeft: 0
-  numberOfSides: 5
+  groundMeshFilter: {fileID: 2823090746359394767}
+  groundMeshCollider: {fileID: 48106079}
+  numberOfSides: 8
+  groundMeshes:
+  - {fileID: -2432090755550338912, guid: 6cfa207ddc46a4cf4b8f59cc63cf3691, type: 3}
+  - {fileID: -2432090755550338912, guid: b036248080c9147bf95ef9e1f9d2f9e2, type: 3}
+  - {fileID: -2432090755550338912, guid: 7f3506039d8f84d8d840cfffa08cac1c, type: 3}
+  - {fileID: -2432090755550338912, guid: e6c0f9d7e247f435999aa05b3931fa5a, type: 3}
+  - {fileID: -2432090755550338912, guid: e247285a377624b3e9d84b012cb6bcf5, type: 3}
+  - {fileID: -2432090755550338912, guid: 48b9cff78ec0c49faba217560f07b903, type: 3}
   spawnerDistance: 15
   spawnerFolder: {fileID: 351429641}
   spawnerPrefab: {fileID: 6841963243652453541, guid: f1d976f3284f1684891da4f8c6cdd88e,
@@ -2910,7 +2904,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8164078558798257086}
-  m_Mesh: {fileID: -2432090755550338912, guid: 7f3506039d8f84d8d840cfffa08cac1c, type: 3}
+  m_Mesh: {fileID: -2432090755550338912, guid: 48b9cff78ec0c49faba217560f07b903, type: 3}
 --- !u!1 &8164078558798257086
 GameObject:
   m_ObjectHideFlags: 0
@@ -2924,7 +2918,7 @@ GameObject:
   - component: {fileID: 1587545473954256219}
   - component: {fileID: 48106079}
   m_Layer: 6
-  m_Name: 5 Pentagon
+  m_Name: Ground Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

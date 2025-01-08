@@ -13,7 +13,7 @@ public class Player_Turret : MonoBehaviour
     private bool canshoot;
 
     [Header("Components")]
-    [SerializeField] Rigidbody rb; // Roots rigidbody
+    [SerializeField] Rigidbody rb; // Roots rigidbody (I don't know why this script has this (!!!!!!!!!!!!!!!!!!!!!!))
     [SerializeField] Transform projectileSpawn; // Start location where the projectile will emit (the gun)
     [SerializeField] Transform body; // The turrets body in which the turret will rotate
     [SerializeField] LineRenderer lineRenderer; // Line Renderer component (The Laser)
@@ -137,14 +137,14 @@ public class Player_Turret : MonoBehaviour
                 lineRenderer.SetPosition(0, projectileSpawn.position);
                 lineRenderer.SetPosition(1, new(currentTarget.position.x, projectileSpawn.position.y, currentTarget.position.z));
                 eHP.Damage(damage);
-                if (canshoot) StartCoroutine(BulletRoutine());
+                if (canshoot) StartCoroutine(LaserAnimation());
             }
             yield return null;
         }
         yield break;
     }
 
-    IEnumerator BulletRoutine()
+    IEnumerator LaserAnimation()
     {
         lineRenderer.enabled = true;
         yield return new WaitForSeconds(Mathf.Clamp(.1f * fireRate, .01f, .1f));
@@ -154,7 +154,7 @@ public class Player_Turret : MonoBehaviour
     }
     #endregion
 
-    void OnDrawGizmos()
+    void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Enemy_AI : MonoBehaviour
 {
@@ -9,15 +8,15 @@ public class Enemy_AI : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float damage = 1;
     [SerializeField] private float attackRate = .5f;
+    [SerializeField] private bool canAttackGroups;
     private Quaternion direction;
     private bool attacking;
-    [SerializeField] private float rayDistance;
     [SerializeField] private LayerMask unitLayer;
     [SerializeField]
     enum EnemyState { Moving, Attacking }
     [SerializeField] EnemyState state = EnemyState.Moving;
 
-    [Header("Attack Variables")]
+    [Header("Detection Variables")]
     [SerializeField] Vector3 attackBoxSize = new(1,1,1);
     [SerializeField] Collider[] hitColliders;
     [SerializeField] int prevLength = 0;
@@ -33,11 +32,11 @@ public class Enemy_AI : MonoBehaviour
 
     void Start()
     {
-        // tower = GameObject.FindWithTag("Tower").transform;
-        direction = Quaternion.LookRotation(transform.position - tower.position);
+        if (tower == null) tower = GameObject.FindWithTag("Tower")?.transform; // Keep in Tutorial 3, remove for Tutorial 4.
+        direction = Quaternion.LookRotation(tower.position - transform.position);
         transform.rotation = direction;
-        rb.velocity = transform.forward * -speed;
-        hpScript.triggerEvent.AddListener(() => waveManager.RemoveEnemy(gameObject));
+        rb.velocity = transform.forward * speed;
+        hpScript.triggerEvent.AddListener(() => waveManager.RemoveEnemy(gameObject)); // Add for tutorial 4
     }
 
     private void FixedUpdate()
@@ -45,6 +44,8 @@ public class Enemy_AI : MonoBehaviour
         AttackBoxDetect();
         if (!attacking) Moving();
     }
+
+    void Moving() => rb.velocity = transform.forward * speed;
 
     void AttackBoxDetect()
     {
@@ -67,7 +68,7 @@ public class Enemy_AI : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos()
+    void OnDrawGizmosSelected()
     {
         Gizmos.matrix = detectBoxPos.localToWorldMatrix;
         Gizmos.color = Color.red;
@@ -75,29 +76,46 @@ public class Enemy_AI : MonoBehaviour
         Gizmos.DrawWireCube(Vector3.zero, attackBoxSize);
     }
 
-    void Moving()
-    {
-        rb.velocity = -transform.forward * speed;
-    }
-
     IEnumerator Attack()
     {
-        List<Character_Health_Script> HSs = new();
-        foreach (var item in hitColliders) HSs.Add(item.GetComponent<Character_Health_Script>());
+        List<Character_Health_Script> HSs = null;
+        Character_Health_Script HS = null;
 
-        while (attacking)
+        // Select variable based on attack mode
+        if (canAttackGroups)
         {
-            foreach (var item in HSs)
+            HSs = new List<Character_Health_Script>();
+            foreach (var item in hitColliders)
             {
-                if (item != null) 
+                var healthScript = item.GetComponent<Character_Health_Script>();
+                if (healthScript != null) HSs.Add(healthScript); // Cache non-null scripts
+            }
+        }
+        else
+        {
+            HS = hitColliders[0]?.GetComponent<Character_Health_Script>();
+        }
+
+        // Start attack loop based on attack mode
+        if (canAttackGroups)
+        {
+            while (attacking)
+            {
+                foreach (var item in HSs)
                 {
                     item.Damage(damage);
-                    // Debug.Log(gameObject.name + " Damaged " + item.name);
                 }
+                yield return new WaitForSeconds(attackRate);
             }
-            yield return new WaitForSeconds(attackRate);
         }
-        yield break;
+        else
+        {
+            while (attacking && HS != null)
+            {
+                HS.Damage(damage);
+                yield return new WaitForSeconds(attackRate);
+            }
+        }
     }
 
     public void UpdateWaveManager() => waveManager.RemoveEnemy(gameObject);

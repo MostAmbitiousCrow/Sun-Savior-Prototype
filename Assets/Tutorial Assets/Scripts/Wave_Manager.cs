@@ -1,10 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.PackageManager;
 using UnityEngine;
-using static UnityEditor.Progress;
-using static Wave_Manager;
 
 public class Wave_Manager : MonoBehaviour
 {
@@ -30,15 +27,7 @@ public class Wave_Manager : MonoBehaviour
     [SerializeField] List<Wave> waveInfo = new();
 
 
-    [SerializeField] float minMaxSpawnRange = 1;
-
-    //[SerializeField]
-    //struct EndlessWave
-    //{
-    //    float duration; // Duration of the wave
-    //    float spawnRate; // Time per rain pattern
-    //    int maxEnemies; // Overall number of enemies to spawn
-    //}
+    [SerializeField] float minMaxEnemySpawnRange = 1;
 
     [Header("Game Stats")]
     [SerializeField] float timeElapsed = 0;
@@ -53,14 +42,17 @@ public class Wave_Manager : MonoBehaviour
     [SerializeField] int enemiesLeft = 0;
 
     [Header("Spawners Setup")]
+    [SerializeField] MeshFilter groundMeshFilter;
+    [SerializeField] MeshCollider groundMeshCollider;
     [SerializeField] int numberOfSides = 5;
+    [SerializeField] Mesh[] groundMeshes;
     [SerializeField] float spawnerDistance = 15;
     [SerializeField] Transform spawnerFolder;
     [SerializeField] GameObject spawnerPrefab;
     [SerializeField] List<Transform> enemySpawners;
-    private int pp = 0;
+    private int activeSpawnersCount = 0;
 
-    private List<Coroutine> spawnerRoutines = new();
+    // private List<Coroutine> spawnerRoutines = new();
 
     void Start() // Create Enemy Spawners
     {
@@ -125,8 +117,16 @@ public class Wave_Manager : MonoBehaviour
                     Debug.Log("At least one enemy needs to spawn.");
                 }
             }
-            //for (int j = 0; j < availableSpawns.Count; j++) print(availableSpawns[j]);
         }
+        // Clamp the number of sides to the valid range
+        numberOfSides = Mathf.Clamp(numberOfSides, 3, 8);
+
+        // Map the number of sides to the corresponding mesh index
+        int meshIndex = numberOfSides - 3;
+
+        // Assign the corresponding mesh to the mesh filter and collider
+        groundMeshFilter.mesh = groundMeshes[meshIndex];
+        groundMeshCollider.sharedMesh = groundMeshes[meshIndex];
     }
     #endregion
 
@@ -150,12 +150,12 @@ public class Wave_Manager : MonoBehaviour
         for (int i = 0; i < waveInfo[currentWave].spawnInfo.Count; i++)
         {
             StartCoroutine(SpawnEnemies(waveInfo[currentWave].spawnInfo[i]));
-            pp++;
+            activeSpawnersCount++;
         }
         currentWave++; // Update Current Wave
         waveStarted = true;
 
-        while (pp > 0) yield return null;
+        while (activeSpawnersCount > 0) yield return null;
         while (enemiesLeft > 0) yield return null;
 
         yield return new WaitForSeconds(3); // Delay before the wave ends
@@ -179,12 +179,12 @@ public class Wave_Manager : MonoBehaviour
             //print("Waited for " + spawnrate);
             yield return new WaitForSeconds(spawnrate); // Enemy spawn cooldown
 
-            SpawnEnemy(spawnpos + (spawner.right * Random.Range(-minMaxSpawnRange, minMaxSpawnRange)), spawnrot);
+            SpawnEnemy(spawnpos + (spawner.right * Random.Range(-minMaxEnemySpawnRange, minMaxEnemySpawnRange)), spawnrot);
 
             yield return null;
         }
         //print("Coroutine Completed");
-        pp--;
+        activeSpawnersCount--;
         yield break;
     }
 

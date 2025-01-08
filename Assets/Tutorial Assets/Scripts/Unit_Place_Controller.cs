@@ -28,6 +28,7 @@ public class Unit_Place_Controller : MonoBehaviour
     [SerializeField] GameObject ghostUnit;
     MeshFilter ghostMeshFilter;
     MeshRenderer ghostMeshRenderer;
+    Material ghostMaterial;
     [SerializeField] Color trueColour = Color.green;
     [SerializeField] Color falseColour = Color.red;
 
@@ -40,7 +41,7 @@ public class Unit_Place_Controller : MonoBehaviour
         [Tooltip("The Mesh of the unit to display.")]
         public Mesh unitMesh;
         [Tooltip("The material of the mesh.")]
-        public Material material;
+        public Material unitMaterial;
         [Tooltip("The x, y and z scale of the collision box of the Unit.")]
         public Vector3 detectBoxScale = new (1,2,1);
     }
@@ -57,7 +58,7 @@ public class Unit_Place_Controller : MonoBehaviour
         ghostMeshFilter = ghostUnit.GetComponent<MeshFilter>();
         MeshRenderer mr = ghostUnit.GetComponent<MeshRenderer>();
         ghostMeshRenderer = mr;
-        // ghostMaterial = new Material (mr.material);
+        ghostMaterial = mr.material;
         ghostUnit.SetActive(false);
 
         falseColour.a = ghostTransparency;
@@ -209,11 +210,15 @@ public class Unit_Place_Controller : MonoBehaviour
     void UpdateGhostUnitComponents(int unitNum)
     {
         ghostMeshFilter.mesh = ghostUnitsInfo[unitNum].unitMesh;
-        Material mat = ghostUnitsInfo[unitNum].material;
-        Color col = mat.GetColor("_BaseColor");
-        col.a = ghostTransparency;
-        mat.SetColor("_BaseColor", col);
-        ghostMeshRenderer.material = mat;
+        // Material mat = new (ghostUnitsInfo[unitNum].material);
+        // Color col = mat.GetColor("_BaseColor");
+        // col.a = ghostTransparency;
+        // mat.SetColor("_BaseColor", col);
+        // // mat.SetColor("_BaseColor", trueColour);
+
+        ghostMaterial = new (ghostUnitsInfo[unitNum].unitMaterial);
+        ghostMaterial.SetColor("_BaseColor", trueColour);
+        ghostMeshRenderer.material = ghostMaterial;
         detectionBox.size = ghostUnitsInfo[unitNum].detectBoxScale;
     }
 }
