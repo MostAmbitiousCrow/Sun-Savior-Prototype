@@ -25,7 +25,7 @@ public class Enemy_AI : MonoBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Transform detectBoxPos;
     [SerializeField] private Character_Health_Script hpScript;
-    public Wave_Manager waveManager;
+    // public Wave_Manager waveManager;
     public Transform tower;
 
     Coroutine routine;
@@ -36,7 +36,7 @@ public class Enemy_AI : MonoBehaviour
         direction = Quaternion.LookRotation(tower.position - transform.position);
         transform.rotation = direction;
         rb.velocity = transform.forward * speed;
-        hpScript.triggerEvent.AddListener(() => waveManager.RemoveEnemy(gameObject)); // Add for tutorial 4
+        hpScript.triggerEvent.AddListener(() => Wave_Manager.instance.RemoveEnemy(gameObject)); // Add for tutorial 4
     }
 
     private void FixedUpdate()
@@ -118,5 +118,5 @@ public class Enemy_AI : MonoBehaviour
         }
     }
 
-    public void UpdateWaveManager() => waveManager.RemoveEnemy(gameObject);
+    // public void UpdateWaveManager() => Wave_Manager.instance.RemoveEnemy(gameObject);
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Wave_Manager : MonoBehaviour
 {
+    public static Wave_Manager instance;
     [Header("Wave Controls")]
     [SerializeField] bool waveStarted;
     public enum WaveMode { WavesInOrder, WavesEndless }
@@ -52,8 +53,6 @@ public class Wave_Manager : MonoBehaviour
     [SerializeField] List<Transform> enemySpawners;
     private int activeSpawnersCount = 0;
 
-    // private List<Coroutine> spawnerRoutines = new();
-
     void Start() // Create Enemy Spawners
     {
         wavesCount = waveInfo.Count;
@@ -71,6 +70,7 @@ public class Wave_Manager : MonoBehaviour
             spawnerT.position = forwardPos;
             Debug.Log(spawnerT.name + " Spawned at: " + spawnerT.position);
         }
+        instance = this;
     }
 
     #region "Validation Check"
@@ -146,7 +146,6 @@ public class Wave_Manager : MonoBehaviour
     {
         activeEnemies.Clear();
         timeElapsed = 0;
-        print("New" + waveInfo[currentWave].spawnInfo.Count);
         for (int i = 0; i < waveInfo[currentWave].spawnInfo.Count; i++)
         {
             StartCoroutine(SpawnEnemies(waveInfo[currentWave].spawnInfo[i]));
@@ -193,7 +192,7 @@ public class Wave_Manager : MonoBehaviour
         GameObject spawnedEnemy = Instantiate(enemyPrefab, spawnpos, spawnrot);
         Enemy_AI sEScript = spawnedEnemy.GetComponent<Enemy_AI>();
         sEScript.tower = tower;
-        sEScript.waveManager = this;
+        // sEScript.waveManager = this;
         activeEnemies.Add(spawnedEnemy);
         enemiesLeft++;
     }

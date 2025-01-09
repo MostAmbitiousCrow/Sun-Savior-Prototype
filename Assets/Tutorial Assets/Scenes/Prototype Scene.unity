@@ -175,7 +175,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: -2432090755550338912, guid: 48b9cff78ec0c49faba217560f07b903, type: 3}
+  m_Mesh: {fileID: -2432090755550338912, guid: b036248080c9147bf95ef9e1f9d2f9e2, type: 3}
 --- !u!1 &106628386
 GameObject:
   m_ObjectHideFlags: 0
@@ -1656,8 +1656,17 @@ MonoBehaviour:
   waveStarted: 0
   mode: 0
   waveInfo:
-  - spawnInfo: []
-  minMaxSpawnRange: 1
+  - spawnInfo:
+    - activeSpawner: 0
+      maxEnemiesToSpawn: 5
+      spawnRate: 4
+    - activeSpawner: 1
+      maxEnemiesToSpawn: 2
+      spawnRate: 2
+    - activeSpawner: 3
+      maxEnemiesToSpawn: 2
+      spawnRate: 2
+  minMaxEnemySpawnRange: 1
   timeElapsed: 0
   gameStarted: 0
   currentWave: 0
@@ -1668,7 +1677,7 @@ MonoBehaviour:
   enemiesLeft: 0
   groundMeshFilter: {fileID: 2823090746359394767}
   groundMeshCollider: {fileID: 48106079}
-  numberOfSides: 8
+  numberOfSides: 4
   groundMeshes:
   - {fileID: -2432090755550338912, guid: 6cfa207ddc46a4cf4b8f59cc63cf3691, type: 3}
   - {fileID: -2432090755550338912, guid: b036248080c9147bf95ef9e1f9d2f9e2, type: 3}
@@ -2904,7 +2913,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8164078558798257086}
-  m_Mesh: {fileID: -2432090755550338912, guid: 48b9cff78ec0c49faba217560f07b903, type: 3}
+  m_Mesh: {fileID: -2432090755550338912, guid: b036248080c9147bf95ef9e1f9d2f9e2, type: 3}
 --- !u!1 &8164078558798257086
 GameObject:
   m_ObjectHideFlags: 0
