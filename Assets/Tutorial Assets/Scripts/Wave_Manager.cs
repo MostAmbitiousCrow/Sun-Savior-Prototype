@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Wave_Manager : MonoBehaviour
 {
     public static Wave_Manager instance;
+    [SerializeField] Button startButton;
+
     [Header("Wave Controls")]
     [SerializeField] bool waveStarted;
     public enum WaveMode { WavesInOrder, WavesEndless }
@@ -153,12 +156,14 @@ public class Wave_Manager : MonoBehaviour
         }
         currentWave++; // Update Current Wave
         waveStarted = true;
+        startButton.interactable = false;
 
         while (activeSpawnersCount > 0) yield return null;
         while (enemiesLeft > 0) yield return null;
 
         yield return new WaitForSeconds(3); // Delay before the wave ends
         waveStarted = false;
+        startButton.interactable = true;
 
         yield break;
     }

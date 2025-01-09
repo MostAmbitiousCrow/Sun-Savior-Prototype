@@ -5,6 +5,7 @@ using UnityEngine;
 public class Camera_Controller : MonoBehaviour
 {
     [Header("Camera Script Variables")]
+    [SerializeField] private bool canRotate = true;
 
     [Tooltip("How fast the camera will move when panning")]
     [SerializeField] private float smoothSpeed = 5;        // Horizontal smooth speed when the rotation is moving towards its target Y Value
@@ -43,10 +44,16 @@ public class Camera_Controller : MonoBehaviour
     #region Update
     void Update()
     {
-        UpdateRotation();
+        if (canRotate) UpdateRotation();
         if (Input.GetKeyDown(KeyCode.F)) UpdateScreenData();
     }
     #endregion
+
+    private void OnApplicationFocus(bool focusStatus)
+    {
+        // if (focusStatus) UpdateScreenData();
+        canRotate = focusStatus;
+    }
 
 
     #region Horizontal Cam Rotation
