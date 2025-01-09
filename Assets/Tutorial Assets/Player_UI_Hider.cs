@@ -10,7 +10,7 @@ public class Player_UI_Hider : MonoBehaviour
     [SerializeField] Vector3 pivotStartPos;
     [SerializeField] Vector3 pivotEndPos;
 
-    void OnDrawGizmosSelected()
+    void Start()
     {
         pivotStartPos = UI_Pivot.anchoredPosition;
     }
