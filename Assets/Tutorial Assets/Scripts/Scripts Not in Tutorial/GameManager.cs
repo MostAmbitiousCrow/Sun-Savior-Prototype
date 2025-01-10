@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class GameManager : MonoBehaviour
 
     public void GameOverEvent()
     {
-
+        RestartGame();
     }
 
     public void GameCompleteEvent()
@@ -40,6 +41,6 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-
+        SceneManager.LoadScene(0);
     }
 }

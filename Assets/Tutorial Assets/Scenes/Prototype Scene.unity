@@ -1492,7 +1492,19 @@ MonoBehaviour:
   health: 0
   triggerEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1872241555}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: GameOverEvent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &966713689
 GameObject:
   m_ObjectHideFlags: 0
@@ -1678,28 +1690,17 @@ MonoBehaviour:
   waveInfo:
   - spawnInfo:
     - activeSpawner: 0
-      maxEnemiesToSpawn: 5
-      spawnRate: 5
-  - spawnInfo:
-    - activeSpawner: 1
-      maxEnemiesToSpawn: 5
-      spawnRate: 5
-    - activeSpawner: 3
       maxEnemiesToSpawn: 10
       spawnRate: 5
-  - spawnInfo:
-    - activeSpawner: 0
-      maxEnemiesToSpawn: 5
-      spawnRate: 4
     - activeSpawner: 1
-      maxEnemiesToSpawn: 2
-      spawnRate: 2
-    - activeSpawner: 3
-      maxEnemiesToSpawn: 2
-      spawnRate: 2
+      maxEnemiesToSpawn: 5
+      spawnRate: 5
     - activeSpawner: 2
-      maxEnemiesToSpawn: 2
-      spawnRate: 2
+      maxEnemiesToSpawn: 15
+      spawnRate: 5
+    - activeSpawner: 3
+      maxEnemiesToSpawn: 5
+      spawnRate: 5
   minMaxEnemySpawnRange: 1
   timeElapsed: 0
   gameStarted: 0
